@@ -46,7 +46,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn @click="startEdition()" color="blue darken-1" flat>Suivant</v-btn>
+        <v-btn @click="loadModel()" color="blue darken-1" flat>Suivant</v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
@@ -88,8 +88,8 @@ export default {
       })
   },
   methods: {
-    startEdition: function () {
-      this.$emit('set-model-id', this.edgesOngoing.concat(this.edgesPendingForEdit)[this.edgeToEditIndex].id)
+    loadModel: function () {
+      this.$emit('load-model', this.edgesOngoing.concat(this.edgesPendingForEdit)[this.edgeToEditIndex].id)
     }
   },
   computed: {

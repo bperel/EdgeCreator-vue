@@ -1,6 +1,6 @@
 <template>
   <v-flex>
-    <v-btn v-for="edgeModel in models" :key="edgeModel.id" :disabled="disabled" small v-bind:style="{ backgroundImage: 'url(\'' + getCountryFlag(edgeModel) + '\')'}">
+    <v-btn v-for="edgeModel in models" :key="edgeModel.id" :disabled="disabled" small :style="{ backgroundImage: 'url(\'' + getCountryFlag(edgeModel) + '\')'}">
       {{ edgeModel.magazine_complet}} n°{{ edgeModel.numero }}
     </v-btn>
   </v-flex>
