@@ -3,7 +3,8 @@
     <Header :user="user" :model="model" :zoom="zoom" @logout="logout" />
     <CheckLoggedIn @retrieve-session-user="loadUser"/>
     <LoginWizard v-if="user.username === undefined" />
-    <MenuWizard v-if="user.username && !model" :user="user" @load-model="loadModel"/>
+    <MenuWizard v-if="user.username && !model" :user="user" @load-model="startModelEdit"/>
+    <ModelEdit v-if="user.username && model" :model="model" :zoom="zoom" />
   </div>
 </template>
 
@@ -12,6 +13,7 @@ import Header from './components/Header'
 import LoginWizard from './components/wizards/LoginWizard'
 import CheckLoggedIn from './components/CheckLoggedIn'
 import MenuWizard from './components/wizards/MenuWizard'
+import ModelEdit from './components/ModelEdit'
 const axios = require('axios')
 
 export default {
@@ -27,11 +29,20 @@ export default {
   },
   methods: {
     loadUser: function (username) {
-      this.user = username
+      let vm = this
+      if (username && this.$route.params.modelId) {
+        this.loadModel(this.$route.params.modelId)
+          .then(function () {
+            vm.user = username
+          })
+      }
+    },
+    startModelEdit: function (modelId) {
+      this.$router.push(`/model/${modelId}`)
     },
     loadModel: function (modelId) {
       let vm = this
-      axios.post(`/tranchesencours/load/${modelId}`)
+      return axios.post(`/tranchesencours/load/${modelId}`)
         .then(function ({ data }) {
           let {
             tranches_en_cours: [{
@@ -56,7 +67,8 @@ export default {
     MenuWizard,
     Header,
     LoginWizard,
-    CheckLoggedIn
+    CheckLoggedIn,
+    ModelEdit
   }
 }
 </script>

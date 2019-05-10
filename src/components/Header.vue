@@ -5,7 +5,7 @@
       <div id="zoom_slider"></div>
     </div>
     <v-flex v-if="model" column justify-center align-center>
-      <div class="subheading text-xs-center">{{ model.publicationTitle}} n°{{ model.issueNumber }}</div>
+      <div class="subheading text-xs-center"><img :src="'images/flags/' + model.countryCode + '.png'" />&nbsp;{{ model.publicationTitle}} n°{{ model.issueNumber }}</div>
       <div class="text-xs-center">
 
         <v-tooltip bottom v-for="menuItem in menuItems" :key="menuItem.icon" data-app>
@@ -71,7 +71,6 @@ export default {
 }
 </script>
 
-<!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped>
   #header {
     position: absolute;

@@ -88,7 +88,7 @@ export default {
       })
   },
   methods: {
-    loadModel: function () {
+    startModelEdit: function () {
       this.$emit('load-model', this.edgesOngoing.concat(this.edgesPendingForEdit)[this.edgeToEditIndex].id)
     }
   },
