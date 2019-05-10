@@ -1,5 +1,5 @@
 <template>
-  <v-flex justify-space-between id="current-steps-and-preview">
+  <v-flex v-if="dimensions.width && steps.length" justify-space-between id="current-steps-and-preview">
       <v-layout wrap id="current-steps">
           <v-sheet
               v-for="step in steps" :key="step.Ordre"
@@ -11,7 +11,13 @@
               <img :src="`/images/fonctions/${step.Nom_fonction}.png`" />
             </v-sheet>
             <v-sheet color="transparent" width="100%">
-              <div>{{ step }}</div>
+              <StepPreview
+                  :zoom="zoom"
+                  :step="step"
+                  :dimensions="dimensions"
+                  :should-load="step.Ordre === steps[loadingStepPreview].Ordre"
+                  @stepLoaded="loadingStepPreview++"
+              />
             </v-sheet>
           </v-sheet>
       </v-layout>
@@ -19,6 +25,8 @@
 </template>
 
 <script>
+import StepPreview from './StepPreview'
+
 export default {
   name: 'ModelEdit',
   props: {
@@ -29,16 +37,14 @@ export default {
     return {
       steps: [],
       editingStep: null,
+      loadingStepPreview: null,
       dimensions: {},
-      MIN_STEP_WIDTH: 30
+      MIN_STEP_WIDTH: 36
     }
   },
   computed: {
-    previewWidth: function () {
-      return this.dimensions.width * this.zoom
-    },
     stepWidth: function () {
-      return Math.max(this.previewWidth, this.MIN_STEP_WIDTH)
+      return Math.max(this.dimensions.width * this.zoom, this.MIN_STEP_WIDTH)
     }
   },
   mounted () {
@@ -47,7 +53,9 @@ export default {
     axios.post('/parametrageg_wizard/index')
       .then(function ({ data }) {
         vm.steps = data.filter(step => step.Ordre !== -1) || []
+        vm.loadingStepPreview = 0
       })
+
     axios.post('/parametrageg_wizard/index/-1')
       .then(function ({ data }) {
         let {
@@ -60,6 +68,9 @@ export default {
         } = data
         vm.dimensions = { width: parseInt(width), height: parseInt(height) }
       })
+  },
+  components: {
+    StepPreview
   }
 }
 </script>
