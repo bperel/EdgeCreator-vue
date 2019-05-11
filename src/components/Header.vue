@@ -1,8 +1,19 @@
 <template>
   <v-flex justify-space-between align-center id="header">
     <div :class="{invisible: !model}">
-      Zoom : <span id="zoom_value">{{zoom}}</span>
-      <div id="zoom_slider"></div>
+      <v-flex d-flex class="zoom-wrapper">
+        <v-label>Zoom :</v-label>
+        <v-slider
+            data-app
+            v-model="zoomKey"
+            @change="$emit('update-zoom', zoomLevels[zoomKey])"
+            :tick-labels="zoomLevels"
+            :max="5"
+            ticks="always"
+            tick-size="6"
+            color="grey"
+        ></v-slider>
+      </v-flex>
     </div>
     <v-flex v-if="model" column justify-center align-center>
       <div class="subheading text-xs-center"><img :src="'images/flags/' + model.countryCode + '.png'" />&nbsp;{{ model.publicationTitle}} n°{{ model.issueNumber }}</div>
@@ -30,12 +41,20 @@
 export default {
   name: 'Header',
   props: {
-    zoom: Number,
     user: Object,
     model: Object
   },
   data () {
     return {
+      zoomLevels: [
+        1,
+        1.5,
+        2,
+        4,
+        6,
+        8
+      ],
+      zoomKey: 1,
       menuItems: [
         {
           icon: 'images/home.png',
@@ -67,6 +86,11 @@ export default {
         }
       ]
     }
+  },
+  computed: {
+    zoom: function () {
+      return this.zoomLevels[this.zoomKey]
+    }
   }
 }
 </script>
@@ -80,6 +104,16 @@ export default {
     border-bottom: 1px solid gray;
     z-index: 101;
     background-color: white;
+  }
+
+  .zoom-wrapper {
+    display: flex;
+    width: 250px;
+    padding: 5px;
+  }
+
+  .zoom-wrapper .v-label {
+    padding: 8px 16px;
   }
 
   .action {

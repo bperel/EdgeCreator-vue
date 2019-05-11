@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <Header :user="user" :model="model" :zoom="zoom" @logout="logout" />
+    <Header :user="user" :model="model" @logout="logout" @update-zoom="updateZoom" />
     <CheckLoggedIn @retrieve-session-user="loadUser"/>
     <LoginWizard v-if="user.username === undefined" />
     <MenuWizard v-if="user.username && !model" :user="user" @load-model="startModelEdit"/>
@@ -39,6 +39,9 @@ export default {
     },
     startModelEdit: function (modelId) {
       this.$router.push(`/model/${modelId}`)
+    },
+    updateZoom: function (newZoom) {
+      this.zoom = newZoom;
     },
     loadModel: function (modelId) {
       let vm = this

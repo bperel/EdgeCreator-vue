@@ -22,7 +22,6 @@ export default {
     shouldLoad: {
       immediate: true,
       handler: function (newVal) {
-        console.log(newVal)
         if (newVal) {
           this.loadPreview = true
         }

@@ -15,7 +15,7 @@
                   :zoom="zoom"
                   :step="step"
                   :dimensions="dimensions"
-                  :should-load="step.Ordre === steps[loadingStepPreview].Ordre"
+                  :should-load="steps[loadingStepPreview] && steps[loadingStepPreview].Ordre === step.Ordre"
                   @stepLoaded="loadingStepPreview++"
               />
             </v-sheet>
