@@ -20,8 +20,12 @@ export default {
   },
   watch: {
     username: function (newValue, oldValue) {
-      if (newValue !== null || oldValue === undefined) {
-        this.$emit('retrieve-session-user', newValue)
+      if (oldValue === undefined) {
+        if (newValue !== null) {
+          this.$emit('retrieve-session-user', newValue)
+        } else {
+          this.$emit('prompt-login', newValue)
+        }
       }
     }
   },
@@ -31,7 +35,10 @@ export default {
       let vm = this
       axios.post('/check_logged_in', { responseType: 'text' })
         .then(function (response) {
-          vm.username = response.data || {}
+          vm.username = (response.data || {}).username ? response.data : null
+        })
+        .catch(function () {
+          vm.username = null
         })
     }
   },

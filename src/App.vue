@@ -1,10 +1,10 @@
 <template>
   <div id="app">
-    <Header :user="user" :model="model" @logout="logout" @update-zoom="updateZoom" />
-    <CheckLoggedIn @retrieve-session-user="loadUser"/>
-    <LoginWizard v-if="user.username === undefined" />
-    <MenuWizard v-if="user.username && !model" :user="user" @load-model="startModelEdit"/>
-    <ModelEdit v-if="user.username && model" :model="model" :zoom="zoom" />
+    <CheckLoggedIn @retrieve-session-user="loadUser" @prompt-login="user = null"/>
+    <Header v-if="user" :user="user" :model="model" @logout="logout" @update-zoom="updateZoom" />
+    <LoginWizard v-if="user === null" />
+    <MenuWizard v-if="user && user.username && !model" :user="user" @load-model="startModelEdit"/>
+    <ModelEdit v-if="user && user.username && model" :model="model" :zoom="zoom" />
   </div>
 </template>
 
@@ -21,9 +21,7 @@ export default {
   data: function () {
     return {
       zoom: 1.5,
-      user: {
-        username: null
-      },
+      user: undefined,
       model: null
     }
   },
@@ -41,7 +39,7 @@ export default {
       this.$router.push(`/model/${modelId}`)
     },
     updateZoom: function (newZoom) {
-      this.zoom = newZoom;
+      this.zoom = newZoom
     },
     loadModel: function (modelId) {
       let vm = this
