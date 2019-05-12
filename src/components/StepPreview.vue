@@ -2,7 +2,7 @@
   <v-sheet
       color="grey lighten-3"
       :class="{preview : true, 'step-preview': true, editing}"
-      @click="!editing && editStep">
+      @click="!editing && editStep()">
     <v-sheet class="header" width="100%" color="rgba(0, 0, 0, .36)">
       <img :src="`/images/fonctions/${step.Nom_fonction}.png`" />
     </v-sheet>
@@ -23,12 +23,13 @@
 
 <script>
 import Fill from './step-functions/Fill'
-import { convertToSimpleOptions } from '../util'
+import stepOptionsMixin from '../stepOptionsMixin'
 const axios = require('axios')
 
 export default {
   name: 'StepPreview.vue',
   components: { Fill },
+  mixins: [stepOptionsMixin],
   props: {
     zoom: Number,
     shouldLoad: Boolean,
@@ -59,7 +60,7 @@ export default {
       let vm = this
       axios.post(`/parametrageg_wizard/index/${this.step.Ordre}`)
         .then(function ({ data }) {
-          vm.stepOptions = convertToSimpleOptions(data)
+          vm.stepOptions = vm.convertToSimpleOptions(data)
           vm.$emit('editing')
         })
     },
@@ -68,7 +69,7 @@ export default {
       this.setPreviewUrl()
     },
     setPreviewUrl: function () {
-      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.step.Ordre}/${JSON.stringify(this.stepOptions)}/false/false/false/${Math.random()}`
+      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.step.Ordre}/${this.objectToUrl(this.stepOptions)}/false/false/false/${Math.random()}`
     }
   },
   mounted () {

@@ -17,10 +17,11 @@
 
 <script>
 import StepPreview from './StepPreview'
-import { convertToSimpleOptions } from '../util'
+import stepOptionsMixin from '../stepOptionsMixin'
 
 export default {
   name: 'ModelEdit',
+  mixins: [stepOptionsMixin],
   props: {
     model: Object,
     zoom: Number
@@ -44,7 +45,7 @@ export default {
 
     axios.post('/parametrageg_wizard/index/-1')
       .then(function ({ data }) {
-        let dimensions = convertToSimpleOptions(data)
+        let dimensions = vm.convertToSimpleOptions(data)
         vm.dimensions = {
           width: parseInt(dimensions.Dimension_x),
           height: parseInt(dimensions.Dimension_y)

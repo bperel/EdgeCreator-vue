@@ -27,6 +27,10 @@
         <li>Sélectionnez une couleur pour modifier la couleur de remplissage.</li>
       </ul>
     </v-alert>
+    <v-flex d-flex align-center>
+      <label for="color">Sélectionnez une couleur :</label>
+      <input v-model="options.Couleur" @change="updatePreview" id="color" type="color" />
+    </v-flex>
   </div>
 </template>
 
@@ -91,7 +95,8 @@ export default {
     updatePreview () {
       this.tweakedOptions = Object.assign(this.tweakedOptions, {
         Pos_x: parseInt(this.fillPoint.x / this.zoom),
-        Pos_y: parseInt(this.fillPoint.y / this.zoom)
+        Pos_y: parseInt(this.fillPoint.y / this.zoom),
+        Couleur: this.options.Couleur.replace('#', '')
       })
       this.$emit('options-changed', this.tweakedOptions)
     }
