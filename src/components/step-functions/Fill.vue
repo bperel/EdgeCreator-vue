@@ -2,20 +2,21 @@
   <div>
     <div class="workspace" :style="{left: crossPosition.left + 'px', top: crossPosition.top + 'px'}" ref="workspace">
       <FreeTransform
-          :width="element.width"
-          :height="element.height"
-          :x="element.x"
-          :y="element.y"
+          :width="fillPoint.width"
+          :height="fillPoint.height"
+          :x="fillPoint.x"
+          :y="fillPoint.y"
           :offset-x="offsetX"
           :offset-y="offsetY"
           :scale-x="1"
           :scale-y="1"
           :angle="0"
           :disable-scale="true"
-          :styles="{width: element.width, height: element.height}"
-          @update="update(element.id, $event)"
+          :styles="{width: fillPoint.width, height: fillPoint.height}"
+          @update="update(fillPoint.id, $event)"
+          @mouseup="updatePreview"
       >
-        <div :style="getElementStyles(element)">
+        <div :style="getElementStyles(fillPoint)">
           <img class="fill-point" src="images/cross.png" />
         </div>
       </FreeTransform>
@@ -35,6 +36,7 @@ import FreeTransform from 'vue-free-transform'
 export default {
   name: 'Fill.vue',
   props: {
+    zoom: Number,
     options: Object,
     stepPreviewImg: {
       default: null
@@ -45,14 +47,15 @@ export default {
     const previewBounds = this.stepPreviewImg.getBoundingClientRect()
 
     return {
+      tweakedOptions: Object.assign({}, this.options),
       previewBounds,
       crossPosition: {
         left: previewBounds.left - CROSS_SIZE / 2,
         top: previewBounds.top - CROSS_SIZE / 2
       },
-      element: {
-        x: parseFloat(this.options.Pos_x),
-        y: parseFloat(this.options.Pos_y),
+      fillPoint: {
+        x: parseFloat(this.options.Pos_x) * this.zoom,
+        y: parseFloat(this.options.Pos_y) * this.zoom,
         width: CROSS_SIZE,
         height: CROSS_SIZE,
         styles: {
@@ -72,8 +75,8 @@ export default {
       if (
         payload.x > 0 && payload.x < this.previewBounds.width &&
         payload.y > 0 && payload.y < this.previewBounds.height) {
-        this.element = {
-          ...this.element,
+        this.fillPoint = {
+          ...this.fillPoint,
           ...payload
         }
       }
@@ -84,6 +87,13 @@ export default {
         height: `${element.height}px`,
         ...(element.styles || {})
       }
+    },
+    updatePreview () {
+      this.tweakedOptions = Object.assign(this.tweakedOptions, {
+        Pos_x: parseInt(this.fillPoint.x / this.zoom),
+        Pos_y: parseInt(this.fillPoint.y / this.zoom)
+      })
+      this.$emit('options-changed', this.tweakedOptions)
     }
   },
   components: {

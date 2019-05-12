@@ -2,7 +2,7 @@
   <v-sheet
       color="grey lighten-3"
       :class="{preview : true, 'step-preview': true, editing}"
-      @click="editStep">
+      @click="!editing && editStep">
     <v-sheet class="header" width="100%" color="rgba(0, 0, 0, .36)">
       <img :src="`/images/fonctions/${step.Nom_fonction}.png`" />
     </v-sheet>
@@ -12,7 +12,7 @@
         <v-flex class="step-options-wrapper" v-if="editing">
           <v-sheet>
             <div v-switch="step.Nom_fonction">
-              <Fill v-case="'Remplir'" :options="stepOptions" :stepPreviewImg="$refs.stepPreview" />
+              <Fill v-case="'Remplir'" :zoom="zoom" :options="stepOptions" :stepPreviewImg="$refs.stepPreview" @options-changed="updatePreview" />
             </div>
           </v-sheet>
         </v-flex>
@@ -39,8 +39,8 @@ export default {
   data () {
     return {
       loadPreview: false,
-      stepPreviewImg: {},
       stepOptions: {},
+      previewUrl: '',
       MIN_STEP_WIDTH: 36
     }
   },
@@ -54,11 +54,6 @@ export default {
       }
     }
   },
-  computed: {
-    previewUrl: function () {
-      return `/viewer_wizard/etape/${this.zoom}/${this.step.Ordre}/${JSON.stringify(this.stepOptions)}/false/false/false/${Math.random()}`
-    }
-  },
   methods: {
     editStep: function () {
       let vm = this
@@ -67,7 +62,17 @@ export default {
           vm.stepOptions = convertToSimpleOptions(data)
           vm.$emit('editing')
         })
+    },
+    updatePreview: function (newOptions) {
+      this.stepOptions = Object.assign({}, this.stepOptions, newOptions)
+      this.setPreviewUrl()
+    },
+    setPreviewUrl: function () {
+      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.step.Ordre}/${JSON.stringify(this.stepOptions)}/false/false/false/${Math.random()}`
     }
+  },
+  mounted () {
+    this.setPreviewUrl()
   }
 }
 </script>

@@ -5,14 +5,15 @@
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
-    "lint": "vue-cli-service lint"
+    "lint": "vue-cli-service lint",
+    "postinstall": "cd node_modules/vue-free-transform && npm run-script build:lib"
   },
   "dependencies": {
     "axios": "^0.18.0",
     "core-js": "^2.6.5",
     "v-switch-case": "^1.0.3",
     "vue": "^2.6.10",
-    "vue-free-transform": "^1.0.11",
+    "vue-free-transform": "https://github.com/koldunsky/vue-free-transform#c9e067d3be3b1e47a7b66f2f692b68b205da5952",
     "vue-router": "^3.0.6",
     "vuetify": "^1.5.14"
   },
