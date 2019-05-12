@@ -1,7 +1,7 @@
 <template>
   <v-flex justify-space-between align-center id="header">
     <div :class="{invisible: !model}">
-      <v-flex d-flex class="zoom-wrapper">
+      <v-flex align-center class="zoom-wrapper">
         <v-label>Zoom :</v-label>
         <v-slider
             data-app
@@ -113,7 +113,8 @@ export default {
   }
 
   .zoom-wrapper .v-label {
-    padding: 8px 16px;
+    padding: 8px;
+    margin-top: -10px;
   }
 
   .action {

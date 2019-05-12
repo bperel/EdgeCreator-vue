@@ -1,31 +1,23 @@
 <template>
   <v-flex v-if="dimensions.width && steps.length" justify-space-between id="current-steps-and-preview">
       <v-layout wrap id="current-steps">
-          <v-sheet
+          <StepPreview
               v-for="step in steps" :key="step.Ordre"
-              color="grey lighten-3"
-              :class="{preview : true, 'step-preview': true, editing : editingStep === step.Ordre}"
-              :width="stepWidth"
-              @click="editingStep = step.Ordre">
-            <v-sheet class="header" width="100%" color="rgba(0, 0, 0, .36)">
-              <img :src="`/images/fonctions/${step.Nom_fonction}.png`" />
-            </v-sheet>
-            <v-sheet color="transparent" width="100%">
-              <StepPreview
-                  :zoom="zoom"
-                  :step="step"
-                  :dimensions="dimensions"
-                  :should-load="steps[loadingStepPreview] && steps[loadingStepPreview].Ordre === step.Ordre"
-                  @stepLoaded="loadingStepPreview++"
-              />
-            </v-sheet>
-          </v-sheet>
+              :zoom="zoom"
+              :step="step"
+              :dimensions="dimensions"
+              :editing="editingStep === step.Ordre"
+              :should-load="steps[loadingStepPreview] && steps[loadingStepPreview].Ordre === step.Ordre"
+              @stepPreviewLoaded="loadingStepPreview++"
+              @editing="editingStep = step.Ordre"
+          />
       </v-layout>
   </v-flex>
 </template>
 
 <script>
 import StepPreview from './StepPreview'
+import { convertToSimpleOptions } from '../util'
 
 export default {
   name: 'ModelEdit',
@@ -38,13 +30,7 @@ export default {
       steps: [],
       editingStep: null,
       loadingStepPreview: null,
-      dimensions: {},
-      MIN_STEP_WIDTH: 36
-    }
-  },
-  computed: {
-    stepWidth: function () {
-      return Math.max(this.dimensions.width * this.zoom, this.MIN_STEP_WIDTH)
+      dimensions: {}
     }
   },
   mounted () {
@@ -58,15 +44,11 @@ export default {
 
     axios.post('/parametrageg_wizard/index/-1')
       .then(function ({ data }) {
-        let {
-          Dimension_x: {
-            valeur: width
-          },
-          Dimension_y: {
-            valeur: height
-          }
-        } = data
-        vm.dimensions = { width: parseInt(width), height: parseInt(height) }
+        let dimensions = convertToSimpleOptions(data)
+        vm.dimensions = {
+          width: parseInt(dimensions.Dimension_x),
+          height: parseInt(dimensions.Dimension_y)
+        }
       })
   },
   components: {
