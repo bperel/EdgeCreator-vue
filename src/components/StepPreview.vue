@@ -2,33 +2,44 @@
   <v-sheet
       color="grey lighten-3"
       :class="{preview : true, 'step-preview': true, editing}"
-      @click="!editing && editStep()">
+      @click.stop="!editing && editStep()">
     <v-sheet class="header" width="100%" color="rgba(0, 0, 0, .36)">
       <img :src="`/images/fonctions/${step.Nom_fonction}.png`" />
+      <span v-if="editing" class="function-name">{{ step.Nom_fonction }}</span>
     </v-sheet>
     <v-sheet color="transparent" width="100%">
       <v-flex d-flex justify-start align-top>
-        <img v-if="loadPreview" ref="stepPreview" :src="previewUrl" @load="$emit('stepPreviewLoaded')"/>
-        <v-flex class="step-options-wrapper" v-if="editing">
+        <img v-if="loadPreview" ref="stepPreview" :src="previewUrl" @load="$emit('step-preview-loaded')"/>
+        <v-layout d-flex column align-content-space-between class="step-options-wrapper" v-if="editing">
           <v-sheet>
             <div v-switch="step.Nom_fonction">
               <Fill v-case="'Remplir'" :zoom="zoom" :options="stepOptions" :stepPreviewImg="$refs.stepPreview" @options-changed="updatePreview" />
             </div>
           </v-sheet>
-        </v-flex>
+          <v-layout justify-end style="flex-grow: 0 !important;">
+            <v-btn v-for="action in availableActions" @click.stop="action.click" :key="action.id" left>
+              {{ action.title }}
+            </v-btn>
+          </v-layout>
+        </v-layout>
       </v-flex>
     </v-sheet>
+    <ConfirmCancelEditWizard
+        v-if="cancelEditRequested"
+        @close-dialog="cancelEditRequested = false"
+        @cancel-edit="cancelEditRequested = false; $emit('stop-editing')" />
   </v-sheet>
 </template>
 
 <script>
 import Fill from './step-functions/Fill'
 import stepOptionsMixin from '../stepOptionsMixin'
+import ConfirmCancelEditWizard from './wizards/ConfirmCancelEditWizard'
 const axios = require('axios')
 
 export default {
   name: 'StepPreview.vue',
-  components: { Fill },
+  components: { ConfirmCancelEditWizard, Fill },
   mixins: [stepOptionsMixin],
   props: {
     zoom: Number,
@@ -40,8 +51,15 @@ export default {
   data () {
     return {
       loadPreview: false,
+      cancelEditRequested: false,
       stepOptions: {},
+      tweakedStepOptions: null,
       previewUrl: '',
+      availableActions: [{
+        id: 'close', title: 'Fermer', click: this.requestCancelEditing
+      }, {
+        id: 'validate', title: 'Valider', click: this.requestCancelEditing
+      }],
       MIN_STEP_WIDTH: 36
     }
   },
@@ -61,15 +79,22 @@ export default {
       axios.post(`/parametrageg_wizard/index/${this.step.Ordre}`)
         .then(function ({ data }) {
           vm.stepOptions = vm.convertToSimpleOptions(data)
-          vm.$emit('editing')
+          vm.$emit('start-editing')
         })
     },
+    requestCancelEditing: function () {
+      if (!this.tweakedStepOptions || this.stepOptions === this.tweakedStepOptions) {
+        this.$emit('stop-editing')
+      } else {
+        this.cancelEditRequested = true
+      }
+    },
     updatePreview: function (newOptions) {
-      this.stepOptions = Object.assign({}, this.stepOptions, newOptions)
+      this.tweakedStepOptions = Object.assign({}, newOptions)
       this.setPreviewUrl()
     },
     setPreviewUrl: function () {
-      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.step.Ordre}/${this.objectToUrl(this.stepOptions)}/false/false/false/${Math.random()}`
+      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.step.Ordre}/${this.objectToUrl(this.tweakedStepOptions || this.stepOptions)}/false/false/false/${Math.random()}`
     }
   },
   mounted () {
@@ -87,6 +112,11 @@ export default {
   }
   .header img {
     height: 18px;
+  }
+
+  .header .function-name {
+    font-weight: bold;
+    color: white;
   }
 
   img {

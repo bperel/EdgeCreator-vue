@@ -21,7 +21,7 @@
         </div>
       </FreeTransform>
     </div>
-    <v-alert type="info" value="1">
+    <v-alert outline color="blue" type="info" value="1" style="background: white">
       <ul>
         <li>Déplacez le curseur en forme de croix pour modifier le point de remplissage.</li>
         <li>Sélectionnez une couleur pour modifier la couleur de remplissage.</li>

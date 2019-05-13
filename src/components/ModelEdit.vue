@@ -8,8 +8,9 @@
               :dimensions="dimensions"
               :editing="editingStep === step.Ordre"
               :should-load="steps[loadingStepPreview] && steps[loadingStepPreview].Ordre === step.Ordre"
-              @stepPreviewLoaded="loadingStepPreview++"
-              @editing="editingStep = step.Ordre"
+              @step-preview-loaded="loadingStepPreview++"
+              @start-editing="editingStep = step.Ordre"
+              @stop-editing="editingStep = null"
           />
       </v-layout>
   </v-flex>

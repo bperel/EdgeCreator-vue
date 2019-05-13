@@ -33,6 +33,8 @@ export default {
           .then(function () {
             vm.user = username
           })
+      } else {
+        vm.user = username
       }
     },
     startModelEdit: function (modelId) {
