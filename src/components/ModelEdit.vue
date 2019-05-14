@@ -1,7 +1,7 @@
 <template>
   <v-flex v-if="dimensions.width && steps.length" justify-space-between id="current-steps-and-preview">
       <v-layout wrap id="current-steps">
-          <StepPreview
+          <EditableStepPreview
               v-for="step in steps" :key="step.Ordre"
               :zoom="zoom"
               :step="step"
@@ -13,10 +13,19 @@
               @stop-editing="editingStep = null"
           />
       </v-layout>
+      <v-layout id="model-preview">
+          <StepPreview
+              :zoom="zoom"
+              :should-load="true"
+              :step="{Ordre: 'final'}"
+              :dimensions="dimensions"
+          />
+      </v-layout>
   </v-flex>
 </template>
 
 <script>
+import EditableStepPreview from './EditableStepPreview'
 import StepPreview from './StepPreview'
 import stepOptionsMixin from '../stepOptionsMixin'
 
@@ -54,6 +63,7 @@ export default {
       })
   },
   components: {
+    EditableStepPreview,
     StepPreview
   }
 }
