@@ -27,7 +27,7 @@
     <ConfirmCancelEditWizard
         v-if="cancelEditRequested"
         @close-dialog="cancelEditRequested = false"
-        @cancel-edit="cancelEditRequested = false; $emit('stop-editing')" />
+        @cancel-edit="cancelEditRequested = false && $emit('stop-editing')"/>
   </v-sheet>
 </template>
 
