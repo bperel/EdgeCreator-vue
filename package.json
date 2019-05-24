@@ -10,7 +10,7 @@
   },
   "dependencies": {
     "axios": "^0.18.0",
-    "core-js": "^2.6.5",
+    "core-js": "^2.6.8",
     "v-switch-case": "^1.0.3",
     "vue": "^2.6.10",
     "vue-free-transform": "https://github.com/koldunsky/vue-free-transform#c9e067d3be3b1e47a7b66f2f692b68b205da5952",
