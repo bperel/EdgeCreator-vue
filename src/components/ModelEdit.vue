@@ -1,14 +1,13 @@
 <template>
   <v-flex v-if="dimensions.width && steps.length" justify-space-between id="current-steps-and-preview">
       <v-layout wrap id="current-steps">
-          <EditableStepPreview
-              v-for="step in steps" :key="step.Ordre"
+          <EditableStepPreview v-for="step in steps" :key="step.Ordre"
               :zoom="zoom"
               :step="step"
               :dimensions="dimensions"
               :editing="editingStep === step.Ordre"
               :should-load="steps[loadingStepPreview] && steps[loadingStepPreview].Ordre === step.Ordre"
-              @step-preview-loaded="loadingStepPreview++"
+              @step-preview-loaded="loadNextStepPreview"
               @start-editing="editingStep = step.Ordre"
               @stop-editing="editingStep = null"
           />
@@ -16,7 +15,7 @@
       <v-layout id="model-preview">
           <StepPreview
               :zoom="zoom"
-              :should-load="true"
+              :should-load="loadingStepPreview === 0"
               :step="{Ordre: 'final'}"
               :dimensions="dimensions"
           />
@@ -44,6 +43,11 @@ export default {
       dimensions: {}
     }
   },
+  watch: {
+    zoom: function () {
+      this.loadingStepPreview = 0
+    }
+  },
   mounted () {
     const axios = require('axios')
     let vm = this
@@ -61,6 +65,17 @@ export default {
           height: parseInt(dimensions.Dimension_y)
         }
       })
+  },
+  methods: {
+    loadNextStepPreview: function () {
+      this.loadingStepPreview++
+      if (this.steps[this.loadingStepPreview] === undefined) {
+        this.loadingStepPreview = -1
+        console.log('Reached last step')
+      } else {
+        console.log('New step to preview : ' + this.loadingStepPreview)
+      }
+    }
   },
   components: {
     EditableStepPreview,
@@ -109,5 +124,9 @@ export default {
 
   .step-preview:not(.editing) {
     cursor: pointer;
+  }
+
+  #model-preview {
+    flex-grow: 0;
   }
 </style>

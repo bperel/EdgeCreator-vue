@@ -44,7 +44,11 @@ export default {
   components: { ConfirmCancelEditWizard, Fill },
   mixins: [stepOptionsMixin],
   props: {
-    editing: Boolean
+    editing: Boolean,
+    shouldLoad: Boolean
+  },
+  mounted () {
+    this.loadPreview = this.shouldLoad
   },
   data () {
     return {
