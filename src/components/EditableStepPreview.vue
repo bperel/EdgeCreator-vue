@@ -27,7 +27,7 @@
     <ConfirmCancelEditWizard
         v-if="cancelEditRequested"
         @close-dialog="cancelEditRequested = false"
-        @cancel-edit="cancelEditRequested = false; $emit('stop-editing')"/>
+        @cancel-edit="cancelEditRequested = false; updatePreview(); $emit('stop-editing')"/>
   </v-sheet>
 </template>
 
@@ -87,7 +87,7 @@ export default {
         this.cancelEditRequested = true
       }
     },
-    updatePreview: function (newOptions) {
+    updatePreview: function (newOptions = {}) {
       this.tweakedStepOptions = Object.assign({}, newOptions)
       this.setPreviewUrl()
     }
