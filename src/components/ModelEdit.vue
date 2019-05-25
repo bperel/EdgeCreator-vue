@@ -71,9 +71,9 @@ export default {
       this.loadingStepPreview++
       if (this.steps[this.loadingStepPreview] === undefined) {
         this.loadingStepPreview = -1
-        console.log('Reached last step')
+        console.debug('Reached last step')
       } else {
-        console.log('New step to preview : ' + this.loadingStepPreview)
+        console.debug('New step to preview : ' + this.loadingStepPreview)
       }
     }
   },

@@ -1,41 +1,30 @@
 <template>
   <div>
-    <div class="workspace" :style="{left: crossPosition.left + 'px', top: crossPosition.top + 'px'}" ref="workspace">
-      <FreeTransform
-          :width="fillPoint.width"
-          :height="fillPoint.height"
-          :x="fillPoint.x"
-          :y="fillPoint.y"
-          :offset-x="offsetX"
-          :offset-y="offsetY"
-          :scale-x="1"
-          :scale-y="1"
-          :angle="0"
-          :disable-scale="true"
-          :styles="{width: fillPoint.width, height: fillPoint.height}"
-          @update="update(fillPoint.id, $event)"
-          @mouseup="updatePreview"
-      >
-        <div :style="getElementStyles(fillPoint)">
-          <img class="fill-point" src="images/cross.png" />
-        </div>
-      </FreeTransform>
-    </div>
+    <Draggable
+        :x="parseFloat(options.Pos_x) * this.zoom"
+        :y="parseFloat(options.Pos_y) * this.zoom"
+        :width="CROSS_SIZE"
+        :height="CROSS_SIZE"
+        :boundX="previewBounds.left - CROSS_SIZE / 2"
+        :boundY="previewBounds.top - CROSS_SIZE / 2"
+        :boundWidth="previewBounds.width"
+        :boundHeight="previewBounds.height"
+        @update-position="updatePreview">
+      <img class="fill-point" src="images/cross.png"/>
+    </Draggable>
     <v-alert outline color="blue" type="info" value="1" style="background: white">
       <ul>
         <li>Déplacez le curseur en forme de croix pour modifier le point de remplissage.</li>
         <li>Sélectionnez une couleur pour modifier la couleur de remplissage.</li>
       </ul>
     </v-alert>
-    <v-flex d-flex align-center>
-      <label for="color">Sélectionnez une couleur :</label>
-      <input v-model="options.Couleur" @change="updatePreview" id="color" type="color" />
-    </v-flex>
+    <ColorPicker :color="options.Couleur" @update-color="updatePreview"/>
   </div>
 </template>
 
 <script>
-import FreeTransform from 'vue-free-transform'
+import ColorPicker from '../pickers/ColorPicker'
+import Draggable from '../interactions/Draggable'
 
 export default {
   name: 'Fill.vue',
@@ -46,81 +35,44 @@ export default {
       default: null
     }
   },
-  data () {
-    const CROSS_SIZE = 10
-    const previewBounds = this.stepPreviewImg.getBoundingClientRect()
-
-    return {
-      tweakedOptions: Object.assign({}, this.options),
-      previewBounds,
-      crossPosition: {
-        left: previewBounds.left - CROSS_SIZE / 2,
-        top: previewBounds.top - CROSS_SIZE / 2
-      },
-      fillPoint: {
-        x: parseFloat(this.options.Pos_x) * this.zoom,
-        y: parseFloat(this.options.Pos_y) * this.zoom,
-        width: CROSS_SIZE,
-        height: CROSS_SIZE,
-        styles: {
-          background: 'linear-gradient(135deg, #0FF0B3 0%,#036ED9 100%)'
-        }
-      },
-      offsetX: 0,
-      offsetY: 0
+  computed: {
+    previewBounds: function () {
+      return this.stepPreviewImg.getBoundingClientRect()
     }
   },
-  mounted () {
-    this.offsetX = this.$refs.workspace.offsetLeft
-    this.offsetY = this.$refs.workspace.offsetTop
+  data () {
+    return {
+      CROSS_SIZE: 10,
+      tweakedOptions: { ...this.options }
+    }
   },
   methods: {
-    update (id, payload) {
-      if (
-        payload.x > 0 && payload.x < this.previewBounds.width &&
-        payload.y > 0 && payload.y < this.previewBounds.height) {
-        this.fillPoint = {
-          ...this.fillPoint,
-          ...payload
-        }
+    updatePreview (newValues = {}) {
+      if (newValues.x) {
+        this.tweakedOptions.Pos_x = parseInt(newValues.x / this.zoom)
       }
-    },
-    getElementStyles (element) {
-      return {
-        width: `${element.width}px`,
-        height: `${element.height}px`,
-        ...(element.styles || {})
+      if (newValues.y) {
+        this.tweakedOptions.Pos_y = parseInt(newValues.y / this.zoom)
       }
-    },
-    updatePreview () {
-      this.tweakedOptions = Object.assign(this.tweakedOptions, {
-        Pos_x: parseInt(this.fillPoint.x / this.zoom),
-        Pos_y: parseInt(this.fillPoint.y / this.zoom),
-        Couleur: this.options.Couleur.replace('#', '')
-      })
+      if (newValues.color) {
+        this.tweakedOptions.Couleur = newValues.color.replace('#', '')
+      }
       this.$emit('options-changed', this.tweakedOptions)
     }
   },
   components: {
-    FreeTransform
+    ColorPicker,
+    Draggable
   }
 }
 </script>
 
 <style>
-  .workspace {
-    position: fixed;
-  }
-
   ul {
     color: black;
   }
 
   .fill-point {
     position: absolute;
-  }
-
-  .tr-transform--active {
-    cursor: move;
   }
 </style>
