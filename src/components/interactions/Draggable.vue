@@ -1,21 +1,21 @@
 <template>
-  <div class="workspace" :style="{left: `${boundX}px`, top: `${boundY}px`}" ref="workspace">
+  <div class="workspace" :style="{left: `${boundX + 1}px`, top: `${boundY + 1}px`}" ref="workspace">
     <FreeTransform
-        :width="fillPoint.width"
-        :height="fillPoint.height"
-        :x="fillPoint.x"
-        :y="fillPoint.y"
+        :width="shape.width"
+        :height="shape.height"
+        :x="shape.x"
+        :y="shape.y"
         :offset-x="offsetX"
         :offset-y="offsetY"
         :scale-x="1"
         :scale-y="1"
         :angle="0"
         :disable-scale="true"
-        :styles="{width: fillPoint.width, height: fillPoint.height}"
-        @update="update(fillPoint.id, $event)"
-        @mouseup="$emit('update-position', {x: fillPoint.x, y: fillPoint.y})"
+        :styles="{width: shape.width, height: shape.height}"
+        @update="update(shape.id, $event)"
+        @mouseup="$emit('update-position', {x: shape.x, y: shape.y})"
     >
-      <div :style="getElementStyles(fillPoint)">
+      <div :style="getElementStyles(shape)">
         <slot></slot>
       </div>
     </FreeTransform>
@@ -39,18 +39,11 @@ export default {
   data () {
     return {
       tweakedOptions: Object.assign({}, this.options),
-      crossPosition: {
-        left: this.x - this.width / 2,
-        top: this.y - this.height / 2
-      },
-      fillPoint: {
+      shape: {
         x: this.x,
         y: this.y,
         width: this.width,
-        height: this.height,
-        styles: {
-          background: 'linear-gradient(135deg, #0FF0B3 0%,#036ED9 100%)'
-        }
+        height: this.height
       },
       offsetX: 0,
       offsetY: 0
@@ -59,10 +52,10 @@ export default {
   methods: {
     update (id, payload) {
       if (
-        payload.x > 0 && payload.x < this.boundWidth &&
-        payload.y > 0 && payload.y < this.boundHeight) {
-        this.fillPoint = {
-          ...this.fillPoint,
+        payload.x + this.width > 0 && payload.x < this.boundWidth &&
+        payload.y + this.height > 0 && payload.y < this.boundHeight) {
+        this.shape = {
+          ...this.shape,
           ...payload
         }
       }

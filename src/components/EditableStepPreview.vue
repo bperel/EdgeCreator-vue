@@ -14,6 +14,7 @@
           <v-sheet>
             <div v-switch="stepFunctionName">
               <Fill v-case="'Remplir'" :zoom="zoom" :options="stepOptions" :stepPreviewImg="$refs.stepPreview" @options-changed="updatePreview" />
+              <Rectangle v-case="'Rectangle'" :zoom="zoom" :options="stepOptions" :stepPreviewImg="$refs.stepPreview" @options-changed="updatePreview" />
             </div>
           </v-sheet>
           <v-layout justify-end style="flex-grow: 0 !important;">
@@ -33,6 +34,8 @@
 
 <script>
 import Fill from './step-functions/Fill'
+import Rectangle from './step-functions/Rectangle'
+
 import stepOptionsMixin from '../stepOptionsMixin'
 import ConfirmCancelEditWizard from './wizards/ConfirmCancelEditWizard'
 import StepPreview from './StepPreview'
@@ -41,7 +44,6 @@ const axios = require('axios')
 export default {
   name: 'EditableStepPreview.vue',
   extends: StepPreview,
-  components: { ConfirmCancelEditWizard, Fill },
   mixins: [stepOptionsMixin],
   props: {
     editing: Boolean,
@@ -92,6 +94,11 @@ export default {
       this.tweakedStepOptions = Object.assign({}, newOptions)
       this.setPreviewUrl()
     }
+  },
+  components: {
+    ConfirmCancelEditWizard,
+    Fill,
+    Rectangle
   }
 }
 </script>

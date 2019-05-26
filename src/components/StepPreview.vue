@@ -51,7 +51,8 @@ export default {
   },
   methods: {
     setPreviewUrl: function () {
-      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.stepNumber}/${this.objectToUrl(this.tweakedStepOptions || this.stepOptions)}/false/false/false/${Math.random()}`
+      let options = this.convertFromSimpleOptions(this.tweakedStepOptions || this.stepOptions)
+      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.stepNumber}/${this.objectToUrl(options)}/false/false/false/${Math.random()}`
     }
   },
   mounted () {

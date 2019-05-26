@@ -1,21 +1,21 @@
 <template>
   <div>
     <Draggable
-        :x="parseFloat(options.Pos_x) * this.zoom"
-        :y="parseFloat(options.Pos_y) * this.zoom"
-        :width="CROSS_SIZE"
-        :height="CROSS_SIZE"
-        :boundX="previewBounds.left - CROSS_SIZE / 2"
-        :boundY="previewBounds.top - CROSS_SIZE / 2"
+        :x="parseFloat(options.Pos_x_debut) * this.zoom"
+        :y="parseFloat(options.Pos_y_debut) * this.zoom"
+        :width="rectangleWidth"
+        :height="rectangleHeight"
+        :boundX="previewBounds.left"
+        :boundY="previewBounds.top"
         :boundWidth="previewBounds.width"
         :boundHeight="previewBounds.height"
         @update-position="updatePreview">
-      <img class="fill-point" src="images/cross.png"/>
+      <div class="rectangle" :style="{...rectangleStyle, width: `${rectangleWidth}px`, height: `${rectangleHeight}px`}"/>
     </Draggable>
     <v-alert outline color="blue" type="info" value="1" style="background: white">
       <ul>
-        <li>Déplacez le curseur en forme de croix pour modifier le point de remplissage.</li>
-        <li>Sélectionnez une couleur pour modifier la couleur de remplissage.</li>
+        <li>Déplacez et redimensionnez le rectangle.</li>
+        <li>Sélectionnez une couleur pour modifier la couleur de remplissage ou de contour.</li>
       </ul>
     </v-alert>
     <ColorPicker :color="options.Couleur" @update-color="updatePreview"/>
@@ -27,7 +27,7 @@ import ColorPicker from '../pickers/ColorPicker'
 import Draggable from '../interactions/Draggable'
 
 export default {
-  name: 'Fill.vue',
+  name: 'Rectangle.vue',
   props: {
     zoom: Number,
     options: Object,
@@ -38,11 +38,22 @@ export default {
   computed: {
     previewBounds: function () {
       return this.stepPreviewImg.getBoundingClientRect()
+    },
+    rectangleStyle: function () {
+      return {
+        backgroundColor: this.options.Rempli ? this.options.Couleur : 'transparent',
+        outline: this.options.Rempli ? 'none' : `1px solid ${this.options.Couleur}`
+      }
+    },
+    rectangleWidth: function () {
+      return parseFloat(this.options.Pos_x_fin - this.options.Pos_x_debut) * this.zoom
+    },
+    rectangleHeight: function () {
+      return parseFloat(this.options.Pos_y_fin - this.options.Pos_y_debut) * this.zoom
     }
   },
   data () {
     return {
-      CROSS_SIZE: 10,
       tweakedOptions: { ...this.options }
     }
   },
@@ -57,6 +68,7 @@ export default {
       if (newValues.color) {
         this.tweakedOptions.Couleur = newValues.color
       }
+      this.tweakedOptions.Couleur = this.tweakedOptions.Couleur.replace('#', '')
 
       this.$emit('options-changed', this.tweakedOptions)
     }
@@ -75,6 +87,5 @@ export default {
 
   .fill-point {
     position: absolute;
-    background: linear-gradient(135deg, #0FF0B3 0%,#036ED9 100%);
   }
 </style>
