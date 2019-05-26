@@ -55,8 +55,10 @@ export default {
         this.tweakedOptions.Pos_y = parseInt(newValues.y / this.zoom)
       }
       if (newValues.color) {
-        this.tweakedOptions.Couleur = newValues.color.replace('#', '')
+        this.tweakedOptions.Couleur = newValues.color
       }
+      this.tweakedOptions.Couleur = this.tweakedOptions.Couleur.replace('#', '')
+
       this.$emit('options-changed', this.tweakedOptions)
     }
   },

@@ -3,7 +3,8 @@
       <v-layout wrap id="current-steps">
           <EditableStepPreview v-for="step in steps" :key="step.Ordre"
               :zoom="zoom"
-              :step="step"
+              :stepNumber="step.Ordre"
+              :stepFunctionName="step.Nom_fonction"
               :dimensions="dimensions"
               :editing="editingStep === step.Ordre"
               :should-load="steps[loadingStepPreview] && steps[loadingStepPreview].Ordre === step.Ordre"
@@ -15,8 +16,7 @@
       <v-layout id="model-preview">
           <StepPreview
               :zoom="zoom"
-              :should-load="loadingStepPreview === 0"
-              :step="{Ordre: 'final'}"
+              :should-load="true"
               :dimensions="dimensions"
           />
       </v-layout>

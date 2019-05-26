@@ -1,5 +1,5 @@
 <template>
-  <v-flex d-flex align-center>
+  <v-flex>
     <label>Sélectionnez une couleur :
       <input :value="color" @input="$emit('update-color', { color: $event.target.value})" type="color" />
     </label>
@@ -16,5 +16,11 @@ export default {
 </script>
 
 <style scoped>
-
+  label {
+    display: flex;
+    align-items: center;
+  }
+  input[type=color] {
+    margin-left: 5px;
+  }
 </style>

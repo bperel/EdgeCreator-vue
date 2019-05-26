@@ -22,7 +22,9 @@ export default {
   props: {
     zoom: Number,
     shouldLoad: Boolean,
-    step: Object,
+    stepNumber: {
+      default: 'final'
+    },
     dimensions: Object
   },
   data () {
@@ -49,7 +51,7 @@ export default {
   },
   methods: {
     setPreviewUrl: function () {
-      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.step.Ordre}/${this.objectToUrl(this.tweakedStepOptions || this.stepOptions)}/false/false/false/${Math.random()}`
+      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.stepNumber}/${this.objectToUrl(this.tweakedStepOptions || this.stepOptions)}/false/false/false/${Math.random()}`
     }
   },
   mounted () {

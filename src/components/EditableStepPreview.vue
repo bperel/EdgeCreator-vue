@@ -4,15 +4,15 @@
       :class="{preview : true, 'step-preview': true, editing}"
       @click.stop="!editing && editStep()">
     <v-sheet class="header" width="100%" color="rgba(0, 0, 0, .36)">
-      <img :src="`/images/fonctions/${step.Nom_fonction}.png`" />
-      <span v-if="editing" class="title">{{ step.Nom_fonction }}</span>
+      <img :src="`/images/fonctions/${stepFunctionName}.png`" />
+      <span v-if="editing" class="title">{{ stepFunctionName }}</span>
     </v-sheet>
     <v-sheet color="transparent" width="100%">
       <v-flex d-flex justify-start align-top>
         <img v-if="loadPreview" ref="stepPreview" :src="previewUrl" @load="$emit('step-preview-loaded')"/>
         <v-layout d-flex column align-content-space-between class="step-options-wrapper" v-if="editing">
           <v-sheet>
-            <div v-switch="step.Nom_fonction">
+            <div v-switch="stepFunctionName">
               <Fill v-case="'Remplir'" :zoom="zoom" :options="stepOptions" :stepPreviewImg="$refs.stepPreview" @options-changed="updatePreview" />
             </div>
           </v-sheet>
@@ -45,7 +45,8 @@ export default {
   mixins: [stepOptionsMixin],
   props: {
     editing: Boolean,
-    shouldLoad: Boolean
+    shouldLoad: Boolean,
+    stepFunctionName: String
   },
   mounted () {
     this.loadPreview = this.shouldLoad
@@ -74,7 +75,7 @@ export default {
   methods: {
     editStep: function () {
       let vm = this
-      axios.post(`/parametrageg_wizard/index/${this.step.Ordre}`)
+      axios.post(`/parametrageg_wizard/index/${this.stepNumber}`)
         .then(function ({ data }) {
           vm.stepOptions = vm.convertToSimpleOptions(data)
           vm.$emit('start-editing')
