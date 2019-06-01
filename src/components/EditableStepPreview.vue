@@ -9,12 +9,13 @@
     </v-sheet>
     <v-sheet color="transparent" width="100%">
       <v-flex d-flex justify-start align-top>
-        <img v-if="loadPreview" ref="stepPreview" :src="previewUrl" @load="$emit('step-preview-loaded')"/>
-        <v-layout d-flex column align-content-space-between class="step-options-wrapper" v-if="editing">
+        <img v-if="loadPreview" v-show="!editing" :src="previewUrl" @load="$emit('step-preview-loaded')"/>
+        <div v-show="editing" ref="canvas" class="empty-canvas" :style="{width: `${dimensions.width*zoom}px`, height: `${dimensions.height*zoom}px`}"></div>
+        <v-layout v-if="editing" d-flex column align-content-space-between class="step-options-wrapper">
           <v-sheet>
             <div v-switch="stepFunctionName">
-              <Fill v-case="'Remplir'" :zoom="zoom" :options="stepOptions" :stepPreviewImg="$refs.stepPreview" @options-changed="updatePreview" />
-              <Rectangle v-case="'Rectangle'" :zoom="zoom" :options="stepOptions" :stepPreviewImg="$refs.stepPreview" @options-changed="updatePreview" />
+              <Fill v-case="'Remplir'" :zoom="zoom" :options="stepOptions" :canvasRef="$refs.canvas" @options-changed="updatePreview" />
+              <Rectangle v-case="'Rectangle'" :zoom="zoom" :options="stepOptions" :canvasRef="$refs.canvas" @options-changed="updatePreview" />
             </div>
           </v-sheet>
           <v-layout justify-end style="flex-grow: 0 !important;">
@@ -104,6 +105,14 @@ export default {
 </script>
 
 <style scoped>
+  .empty-canvas {
+    flex-shrink: 0 !important;
+    flex-grow: 0 !important;
+    border: 1px solid black;
+    background-color: white;
+    margin: 0 8px;
+  }
+
   .step-options-wrapper {
     margin: 16px 16px 16px 8px ;
   }

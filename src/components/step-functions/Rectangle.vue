@@ -31,13 +31,13 @@ export default {
   props: {
     zoom: Number,
     options: Object,
-    stepPreviewImg: {
+    canvasRef: {
       default: null
     }
   },
   computed: {
     previewBounds: function () {
-      return this.stepPreviewImg.getBoundingClientRect()
+      return this.canvasRef.getBoundingClientRect()
     },
     rectangleStyle: function () {
       return {
