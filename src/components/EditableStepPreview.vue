@@ -57,7 +57,7 @@ export default {
   data () {
     return {
       cancelEditRequested: false,
-      tweakedStepOptions: null,
+      tweakedOptions: null,
       availableActions: [{
         id: 'close', title: 'Fermer', click: this.requestCancelEditing
       }, {
@@ -85,15 +85,15 @@ export default {
         })
     },
     requestCancelEditing: function () {
-      if (!this.tweakedStepOptions || this.stepOptions === this.tweakedStepOptions) {
+      if (!this.tweakedOptions || this.stepOptions === this.tweakedOptions) {
         this.$emit('stop-editing')
       } else {
         this.cancelEditRequested = true
       }
     },
     updatePreview: function (newOptions = {}) {
-      this.tweakedStepOptions = Object.assign({}, newOptions)
-      this.setPreviewUrl()
+      this.tweakedOptions = Object.assign({}, newOptions)
+      this.$emit('tweak-options', this.tweakedOptions)
     }
   },
   components: {

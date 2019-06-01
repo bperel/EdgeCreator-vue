@@ -1,8 +1,8 @@
 <template>
   <div>
     <Draggable
-        :x="parseFloat(options.Pos_x) * this.zoom"
-        :y="parseFloat(options.Pos_y) * this.zoom"
+        :x="parseFloat(tweakedStepOptions.Pos_x) * this.zoom"
+        :y="parseFloat(tweakedStepOptions.Pos_y) * this.zoom"
         :width="CROSS_SIZE"
         :height="CROSS_SIZE"
         :boundX="previewBounds.left - CROSS_SIZE / 2"
@@ -18,7 +18,7 @@
         <li>Sélectionnez une couleur pour modifier la couleur de remplissage.</li>
       </ul>
     </v-alert>
-    <ColorPicker :color="options.Couleur" @update-color="updatePreview"/>
+    <ColorPicker :color="tweakedStepOptions.Couleur" @update-color="updatePreview"/>
   </div>
 </template>
 
@@ -43,22 +43,22 @@ export default {
   data () {
     return {
       CROSS_SIZE: 10,
-      tweakedOptions: { ...this.options }
+      tweakedStepOptions: { ...this.options }
     }
   },
   methods: {
     updatePreview (newValues = {}) {
       if (newValues.x) {
-        this.tweakedOptions.Pos_x = parseInt(newValues.x / this.zoom)
+        this.tweakedStepOptions.Pos_x = parseInt(newValues.x / this.zoom)
       }
       if (newValues.y) {
-        this.tweakedOptions.Pos_y = parseInt(newValues.y / this.zoom)
+        this.tweakedStepOptions.Pos_y = parseInt(newValues.y / this.zoom)
       }
       if (newValues.color) {
-        this.tweakedOptions.Couleur = newValues.color
+        this.tweakedStepOptions.Couleur = newValues.color
       }
 
-      this.$emit('options-changed', this.tweakedOptions)
+      this.$emit('options-changed', this.tweakedStepOptions)
     }
   },
   components: {

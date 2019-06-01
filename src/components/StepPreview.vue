@@ -25,13 +25,14 @@ export default {
     stepNumber: {
       default: 'final'
     },
+    tweakedStep: Number,
+    tweakedStepOptions: Object,
     dimensions: Object
   },
   data () {
     return {
       loadPreview: false,
       stepOptions: {},
-      tweakedStepOptions: null,
       previewUrl: '',
       MIN_STEP_WIDTH: 36
     }
@@ -47,12 +48,15 @@ export default {
     },
     zoom: function () {
       this.setPreviewUrl()
+    },
+    tweakedStepOptions: function () {
+      this.setPreviewUrl()
     }
   },
   methods: {
     setPreviewUrl: function () {
-      let options = this.convertFromSimpleOptions(this.tweakedStepOptions || this.stepOptions)
-      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.stepNumber}/${this.objectToUrl(options)}/false/false/false/${Math.random()}`
+      let options = this.convertFromSimpleOptions(this.tweakedStepOptions || {})
+      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.stepNumber}/${this.tweakedStep ? this.tweakedStep + '.' : ''}${this.objectToUrlParams(options)}/false/false/false/${Math.random()}`
     }
   },
   mounted () {

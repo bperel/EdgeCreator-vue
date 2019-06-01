@@ -7,17 +7,20 @@
               :stepFunctionName="step.Nom_fonction"
               :dimensions="dimensions"
               :editing="editingStep === step.Ordre"
-              :should-load="steps[loadingStepPreview] && steps[loadingStepPreview].Ordre === step.Ordre"
+              :shouldLoad="steps[loadingStepPreview] && steps[loadingStepPreview].Ordre === step.Ordre"
               @step-preview-loaded="loadNextStepPreview"
               @start-editing="editingStep = step.Ordre"
+              @tweak-options="tweakedStep=editingStep;tweakedStepOptions=$event"
               @stop-editing="editingStep = null"
           />
       </v-layout>
       <v-layout id="model-preview">
           <StepPreview
               :zoom="zoom"
-              :should-load="true"
+              :shouldLoad="true"
               :dimensions="dimensions"
+              :tweakedStep="tweakedStep"
+              :tweakedStepOptions="tweakedStepOptions"
           />
       </v-layout>
   </v-flex>
@@ -40,7 +43,9 @@ export default {
       steps: [],
       editingStep: null,
       loadingStepPreview: null,
-      dimensions: {}
+      dimensions: {},
+      tweakedStep: undefined,
+      tweakedStepOptions: {}
     }
   },
   watch: {

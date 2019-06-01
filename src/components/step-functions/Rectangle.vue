@@ -1,8 +1,8 @@
 <template>
   <div>
     <Draggable
-        :x="parseFloat(options.Pos_x_debut) * this.zoom"
-        :y="parseFloat(options.Pos_y_debut) * this.zoom"
+        :x="parseFloat(tweakedStepOptions.Pos_x_debut) * this.zoom"
+        :y="parseFloat(tweakedStepOptions.Pos_y_debut) * this.zoom"
         :width="rectangleWidth"
         :height="rectangleHeight"
         :boundX="previewBounds.left"
@@ -18,7 +18,7 @@
         <li>Sélectionnez une couleur pour modifier la couleur de remplissage ou de contour.</li>
       </ul>
     </v-alert>
-    <ColorPicker :color="options.Couleur" @update-color="updatePreview"/>
+    <ColorPicker :color="tweakedStepOptions.Couleur" @update-color="updatePreview"/>
   </div>
 </template>
 
@@ -41,36 +41,41 @@ export default {
     },
     rectangleStyle: function () {
       return {
-        backgroundColor: this.options.Rempli ? this.options.Couleur : 'transparent',
-        outline: this.options.Rempli ? 'none' : `1px solid ${this.options.Couleur}`
+        backgroundColor: this.tweakedStepOptions.Rempli ? this.tweakedStepOptions.Couleur : 'transparent',
+        outline: this.tweakedStepOptions.Rempli ? 'none' : `1px solid ${this.tweakedStepOptions.Couleur}`
       }
     },
     rectangleWidth: function () {
-      return parseFloat(this.options.Pos_x_fin - this.options.Pos_x_debut) * this.zoom
+      return parseFloat(this.tweakedStepOptions.Pos_x_fin - this.tweakedStepOptions.Pos_x_debut) * this.zoom
     },
     rectangleHeight: function () {
-      return parseFloat(this.options.Pos_y_fin - this.options.Pos_y_debut) * this.zoom
+      return parseFloat(this.tweakedStepOptions.Pos_y_fin - this.tweakedStepOptions.Pos_y_debut) * this.zoom
     }
   },
   data () {
     return {
-      tweakedOptions: { ...this.options }
+      tweakedStepOptions: { ...this.options }
     }
   },
   methods: {
     updatePreview (newValues = {}) {
       if (newValues.x) {
-        this.tweakedOptions.Pos_x = parseInt(newValues.x / this.zoom)
+        this.tweakedStepOptions.Pos_x_debut = parseInt(newValues.x / this.zoom)
+      }
+      if (newValues.width) {
+        this.tweakedStepOptions.Pos_x_fin = parseInt((newValues.x + newValues.width) / this.zoom)
       }
       if (newValues.y) {
-        this.tweakedOptions.Pos_y = parseInt(newValues.y / this.zoom)
+        this.tweakedStepOptions.Pos_y_debut = parseInt(newValues.y / this.zoom)
+      }
+      if (newValues.height) {
+        this.tweakedStepOptions.Pos_y_fin = parseInt((newValues.y + newValues.height) / this.zoom)
       }
       if (newValues.color) {
-        this.tweakedOptions.Couleur = newValues.color
+        this.tweakedStepOptions.Couleur = newValues.color
       }
-      this.tweakedOptions.Couleur = this.tweakedOptions.Couleur.replace('#', '')
 
-      this.$emit('options-changed', this.tweakedOptions)
+      this.$emit('options-changed', this.tweakedStepOptions)
     }
   },
   components: {

@@ -34,8 +34,8 @@ export default {
       }
       return options
     },
-    objectToUrl: function (o) {
-      return Object.keys(o).map(key => `${key}=${encodeURIComponent(o[key])}`).join('&')
+    objectToUrlParams: function (o) {
+      return Object.keys(o).map(key => `${key}=${encodeURIComponent(o[key])}`).join('&') || '_'
     }
   }
 }
