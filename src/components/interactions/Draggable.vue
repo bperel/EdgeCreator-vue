@@ -13,7 +13,7 @@
         :disable-scale="true"
         :styles="{width: shape.width, height: shape.height}"
         @update="update(shape.id, $event)"
-        @mouseup="$emit('update-position', {x: shape.x, y: shape.y})"
+        @mouseup="$emit('update-position', shape)"
     >
       <div :style="getElementStyles(shape)">
         <slot></slot>
@@ -38,7 +38,6 @@ export default {
   },
   data () {
     return {
-      tweakedOptions: Object.assign({}, this.options),
       shape: {
         x: this.x,
         y: this.y,
