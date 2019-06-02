@@ -1,8 +1,8 @@
 <template>
   <div>
     <Draggable
-        :x="parseFloat(tweakedStepOptions.Pos_x_debut) * this.zoom"
-        :y="parseFloat(tweakedStepOptions.Pos_y_debut) * this.zoom"
+        :x="$store.getters.addZoom(tweakedStepOptions.Pos_x_debut)"
+        :y="$store.getters.addZoom(tweakedStepOptions.Pos_y_debut)"
         :width="rectangleWidth"
         :height="rectangleHeight"
         :boundX="previewBounds.left"
@@ -29,13 +29,15 @@ import Draggable from '../interactions/Draggable'
 export default {
   name: 'Rectangle.vue',
   props: {
-    zoom: Number,
     options: Object,
     canvasRef: {
       default: null
     }
   },
   computed: {
+    zoom () {
+      return this.$store.state.zoom
+    },
     previewBounds: function () {
       return this.canvasRef.getBoundingClientRect()
     },
@@ -46,10 +48,10 @@ export default {
       }
     },
     rectangleWidth: function () {
-      return parseFloat(this.tweakedStepOptions.Pos_x_fin - this.tweakedStepOptions.Pos_x_debut) * this.zoom
+      return this.$store.getters.addZoom(this.tweakedStepOptions.Pos_x_fin - this.tweakedStepOptions.Pos_x_debut)
     },
     rectangleHeight: function () {
-      return parseFloat(this.tweakedStepOptions.Pos_y_fin - this.tweakedStepOptions.Pos_y_debut) * this.zoom
+      return this.$store.getters.addZoom(this.tweakedStepOptions.Pos_y_fin - this.tweakedStepOptions.Pos_y_debut)
     }
   },
   data () {
@@ -60,16 +62,16 @@ export default {
   methods: {
     updatePreview (newValues = {}) {
       if (newValues.x) {
-        this.tweakedStepOptions.Pos_x_debut = parseInt(newValues.x / this.zoom)
+        this.tweakedStepOptions.Pos_x_debut = this.$store.getters.removeZoom(newValues.x)
       }
       if (newValues.width) {
-        this.tweakedStepOptions.Pos_x_fin = parseInt((newValues.x + newValues.width) / this.zoom)
+        this.tweakedStepOptions.Pos_x_fin = this.$store.getters.removeZoom(newValues.x + newValues.width)
       }
       if (newValues.y) {
-        this.tweakedStepOptions.Pos_y_debut = parseInt(newValues.y / this.zoom)
+        this.tweakedStepOptions.Pos_y_debut = this.$store.getters.removeZoom(newValues.y)
       }
       if (newValues.height) {
-        this.tweakedStepOptions.Pos_y_fin = parseInt((newValues.y + newValues.height) / this.zoom)
+        this.tweakedStepOptions.Pos_y_fin = this.$store.getters.removeZoom(newValues.y + newValues.height)
       }
       if (newValues.color) {
         this.tweakedStepOptions.Couleur = newValues.color

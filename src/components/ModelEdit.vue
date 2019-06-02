@@ -2,7 +2,6 @@
   <v-flex v-if="dimensions.width && steps.length" justify-space-between id="current-steps-and-preview">
       <v-layout wrap id="current-steps">
           <EditableStepPreview v-for="step in steps" :key="step.Ordre"
-              :zoom="zoom"
               :stepNumber="step.Ordre"
               :stepFunctionName="step.Nom_fonction"
               :dimensions="dimensions"
@@ -16,7 +15,6 @@
       </v-layout>
       <v-layout id="model-preview">
           <StepPreview
-              :zoom="zoom"
               :shouldLoad="true"
               :dimensions="dimensions"
               :tweakedStep="tweakedStep"

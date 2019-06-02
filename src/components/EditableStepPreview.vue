@@ -14,8 +14,8 @@
         <v-layout v-if="editing" d-flex column align-content-space-between class="step-options-wrapper">
           <v-sheet>
             <div v-switch="stepFunctionName">
-              <Fill v-case="'Remplir'" :zoom="zoom" :options="stepOptions" :canvasRef="$refs.canvas" @options-changed="updatePreview" />
-              <Rectangle v-case="'Rectangle'" :zoom="zoom" :options="stepOptions" :canvasRef="$refs.canvas" @options-changed="updatePreview" />
+              <Fill v-case="'Remplir'" :options="stepOptions" :canvasRef="$refs.canvas" @options-changed="updatePreview" />
+              <Rectangle v-case="'Rectangle'" :options="stepOptions" :canvasRef="$refs.canvas" @options-changed="updatePreview" />
             </div>
           </v-sheet>
           <v-layout justify-end style="flex-grow: 0 !important;">

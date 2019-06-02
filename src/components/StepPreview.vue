@@ -20,7 +20,6 @@ export default {
   name: 'StepPreview.vue',
   mixins: [stepOptionsMixin],
   props: {
-    zoom: Number,
     shouldLoad: Boolean,
     stepNumber: {
       default: 'final'
@@ -35,6 +34,11 @@ export default {
       stepOptions: {},
       previewUrl: '',
       MIN_STEP_WIDTH: 36
+    }
+  },
+  computed: {
+    zoom () {
+      return this.$store.state.zoom
     }
   },
   watch: {

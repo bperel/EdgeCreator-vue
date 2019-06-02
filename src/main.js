@@ -30,6 +30,14 @@ const store = new Vuex.Store({
     setModel (state, model) {
       state.model = model
     }
+  },
+  getters: {
+    addZoom: (state) => value => {
+      return parseFloat(value) * state.zoom
+    },
+    removeZoom: (state) => value => {
+      return parseInt(value / state.zoom)
+    }
   }
 })
 

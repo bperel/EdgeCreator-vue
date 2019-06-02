@@ -1,8 +1,8 @@
 <template>
   <div>
     <Draggable
-        :x="parseFloat(tweakedStepOptions.Pos_x) * this.zoom"
-        :y="parseFloat(tweakedStepOptions.Pos_y) * this.zoom"
+        :x="$store.getters.addZoom(tweakedStepOptions.Pos_x)"
+        :y="$store.getters.addZoom(tweakedStepOptions.Pos_y)"
         :width="CROSS_SIZE"
         :height="CROSS_SIZE"
         :boundX="previewBounds.left - CROSS_SIZE / 2"
@@ -29,7 +29,6 @@ import Draggable from '../interactions/Draggable'
 export default {
   name: 'Fill.vue',
   props: {
-    zoom: Number,
     options: Object,
     canvasRef: {
       default: null
@@ -49,10 +48,10 @@ export default {
   methods: {
     updatePreview (newValues = {}) {
       if (newValues.x) {
-        this.tweakedStepOptions.Pos_x = parseInt(newValues.x / this.zoom)
+        this.tweakedStepOptions.Pos_x = this.$store.getters.removeZoom(newValues.x)
       }
       if (newValues.y) {
-        this.tweakedStepOptions.Pos_y = parseInt(newValues.y / this.zoom)
+        this.tweakedStepOptions.Pos_y = this.$store.getters.removeZoom(newValues.y)
       }
       if (newValues.color) {
         this.tweakedStepOptions.Couleur = newValues.color
