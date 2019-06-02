@@ -57,9 +57,6 @@ import EdgeModelButtonList from '../buttons/EdgeModelButtonList'
 
 export default {
   name: 'MenuWizard',
-  props: {
-    user: Object
-  },
   data: function () {
     return {
       dialog: true,
@@ -94,7 +91,7 @@ export default {
   },
   computed: {
     userIsEditor: function () {
-      return ['Edition', 'Admin'].includes(this.user.privilege)
+      return ['Edition', 'Admin'].includes(this.$store.state.user.privilege)
     },
     availableActions: function () {
       let vm = this

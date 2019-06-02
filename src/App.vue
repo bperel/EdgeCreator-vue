@@ -1,9 +1,9 @@
 <template>
   <div id="app">
-    <CheckLoggedIn @retrieve-session-user="loadUser" @prompt-login="user = null"/>
-    <Header v-if="user" :user="user" :model="model" @logout="logout" @update-zoom="updateZoom" />
+    <CheckLoggedIn @retrieve-session-user="loadUser" @prompt-login="$store.commit('setUser', null)"/>
+    <Header v-if="user" :model="model" @logout="logout" @update-zoom="updateZoom" />
     <LoginWizard v-if="user === null" />
-    <MenuWizard v-if="user && user.username && !model" :user="user" @load-model="startModelEdit"/>
+    <MenuWizard v-if="user && user.username && !model" @load-model="startModelEdit"/>
     <ModelEdit v-if="user && user.username && model" :model="model" :zoom="zoom" />
   </div>
 </template>
@@ -21,20 +21,24 @@ export default {
   data: function () {
     return {
       zoom: 1.5,
-      user: undefined,
       model: null
     }
   },
+  computed: {
+    user () {
+      return this.$store.state.user
+    }
+  },
   methods: {
-    loadUser: function (username) {
+    loadUser: function (user) {
       let vm = this
-      if (username && this.$route.params.modelId) {
+      if (user && this.$route.params.modelId) {
         this.loadModel(this.$route.params.modelId)
-          .then(function () {
-            vm.user = username
+          .then(() => {
+            vm.$store.commit('setUser', user)
           })
       } else {
-        vm.user = username
+        vm.$store.commit('setUser', user)
       }
     },
     startModelEdit: function (modelId) {

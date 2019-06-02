@@ -28,8 +28,8 @@
       </div>
     </v-flex>
     <div id="status_user">
-      <v-layout column v-if="user.username">
-        <div>Connecté(e) en tant que <span id="utilisateur">{{user.username}}</span></div>
+      <v-layout column v-if="$store.state.user.username">
+        <div>Connecté(e) en tant que <span id="utilisateur">{{$store.state.user.username}}</span></div>
         <v-btn small @click="$emit('logout')">Déconnexion</v-btn>
       </v-layout>
       <div v-else>Non connecté(e)</div>
@@ -41,7 +41,6 @@
 export default {
   name: 'Header',
   props: {
-    user: Object,
     model: Object
   },
   data () {
