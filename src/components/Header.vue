@@ -6,7 +6,7 @@
         <v-slider
             data-app
             v-model="zoomKey"
-            @change="$store.commit('setZoom', zoomLevels[zoomKey])"
+            @change="setZoom(zoomLevels[zoomKey])"
             :tick-labels="zoomLevels"
             :max="zoomLevels.length - 1"
             ticks="always"
@@ -28,8 +28,8 @@
       </div>
     </v-flex>
     <div id="status_user">
-      <v-layout column v-if="$store.state.user.username">
-        <div>Connecté(e) en tant que <span id="utilisateur">{{$store.state.user.username}}</span></div>
+      <v-layout column v-if="user.username">
+        <div>Connecté(e) en tant que <span id="utilisateur">{{user.username}}</span></div>
         <v-btn small @click="$emit('logout')">Déconnexion</v-btn>
       </v-layout>
       <div v-else>Non connecté(e)</div>
@@ -38,13 +38,15 @@
 </template>
 
 <script>
+import { mapMutations, mapState } from 'vuex'
+
 const ZOOM_LEVELS = [1, 1.5, 2, 4, 6, 8]
 export default {
   name: 'Header',
   data () {
     return {
       zoomLevels: ZOOM_LEVELS,
-      zoomKey: ZOOM_LEVELS.indexOf(this.$store.state.zoom),
+      zoomKey: ZOOM_LEVELS.indexOf(this.zoom),
       menuItems: [
         {
           icon: 'images/home.png',
@@ -77,11 +79,13 @@ export default {
       ]
     }
   },
-  computed: {
-    model () {
-      return this.$store.state.model
-    }
-  }
+  computed: mapState([
+    'model',
+    'user'
+  ]),
+  methods: mapMutations([
+    'setZoom'
+  ])
 }
 </script>
 

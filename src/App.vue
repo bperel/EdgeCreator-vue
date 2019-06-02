@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <CheckLoggedIn @retrieve-session-user="loadUser" @prompt-login="$store.commit('setUser', null)"/>
+    <CheckLoggedIn @retrieve-session-user="loadUser" @prompt-login="setUser(null)"/>
     <Header v-if="user" @logout="logout" />
     <LoginWizard v-if="user === null" />
     <MenuWizard v-if="user && user.username && !model" @load-model="startModelEdit"/>
@@ -14,27 +14,28 @@ import LoginWizard from './components/wizards/LoginWizard'
 import CheckLoggedIn from './components/CheckLoggedIn'
 import MenuWizard from './components/wizards/MenuWizard'
 import ModelEdit from './components/ModelEdit'
+import { mapMutations, mapState } from 'vuex'
 const axios = require('axios')
 
 export default {
   name: 'app',
-  computed: {
-    user () {
-      return this.$store.state.user
-    },
-    model () {
-      return this.$store.state.model
-    }
-  },
+  computed: mapState([
+    'user',
+    'model'
+  ]),
   methods: {
+    ...mapMutations([
+      'setUser',
+      'setModel'
+    ]),
     loadUser: function (user) {
       let vm = this
       if (user && this.$route.params.modelId) {
         this.loadModel(this.$route.params.modelId).then(() => {
-          vm.$store.commit('setUser', user)
+          vm.setUser(user)
         })
       } else {
-        vm.$store.commit('setUser', user)
+        vm.setUser(user)
       }
     },
     startModelEdit: function (modelId) {
@@ -53,7 +54,7 @@ export default {
             }]
           } = data
 
-          vm.$store.commit('setModel', { id, countryCode, publicationTitle, issueNumber })
+          vm.setModel({ id, countryCode, publicationTitle, issueNumber })
         })
     },
     logout: function () {

@@ -27,6 +27,7 @@
 import EditableStepPreview from './EditableStepPreview'
 import StepPreview from './StepPreview'
 import stepOptionsMixin from '../stepOptionsMixin'
+import { mapMutations, mapState } from 'vuex'
 
 export default {
   name: 'ModelEdit',
@@ -40,14 +41,10 @@ export default {
       tweakedStepOptions: {}
     }
   },
-  computed: {
-    zoom () {
-      return this.$store.state.zoom
-    },
-    dimensions () {
-      return this.$store.state.dimensions
-    }
-  },
+  computed: mapState([
+    'zoom',
+    'dimensions'
+  ]),
   watch: {
     zoom: function () {
       this.loadingStepPreview = 0
@@ -65,13 +62,16 @@ export default {
     axios.post('/parametrageg_wizard/index/-1')
       .then(function ({ data }) {
         let dimensions = vm.convertToSimpleOptions(data)
-        vm.$store.commit('setDimensions', {
+        vm.setDimensions({
           width: parseInt(dimensions.Dimension_x),
           height: parseInt(dimensions.Dimension_y)
         })
       })
   },
   methods: {
+    ...mapMutations([
+      'setDimensions'
+    ]),
     loadNextStepPreview: function () {
       this.loadingStepPreview++
       if (this.steps[this.loadingStepPreview] === undefined) {

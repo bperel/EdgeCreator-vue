@@ -15,6 +15,7 @@
 
 <script>
 import stepOptionsMixin from '../stepOptionsMixin'
+import { mapState } from 'vuex'
 
 export default {
   name: 'StepPreview.vue',
@@ -34,11 +35,9 @@ export default {
       previewUrl: ''
     }
   },
-  computed: {
-    zoom () {
-      return this.$store.state.zoom
-    }
-  },
+  computed: mapState([
+    'zoom'
+  ]),
   watch: {
     shouldLoad: {
       immediate: true,

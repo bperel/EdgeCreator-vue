@@ -1,8 +1,8 @@
 <template>
   <div>
     <Draggable
-        :x="$store.getters.addZoom(tweakedStepOptions.Pos_x)"
-        :y="$store.getters.addZoom(tweakedStepOptions.Pos_y)"
+        :x="addZoom(tweakedStepOptions.Pos_x)"
+        :y="addZoom(tweakedStepOptions.Pos_y)"
         :width="CROSS_SIZE"
         :height="CROSS_SIZE"
         :boundOffsetX="- CROSS_SIZE / 2"
@@ -23,6 +23,7 @@
 <script>
 import ColorPicker from '../pickers/ColorPicker'
 import Draggable from '../interactions/Draggable'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Fill.vue',
@@ -35,13 +36,17 @@ export default {
       tweakedStepOptions: { ...this.options }
     }
   },
+  computed: mapGetters([
+    'addZoom',
+    'removeZoom'
+  ]),
   methods: {
     updatePreview (newValues = {}) {
       if (newValues.x) {
-        this.tweakedStepOptions.Pos_x = this.$store.getters.removeZoom(newValues.x)
+        this.tweakedStepOptions.Pos_x = this.removeZoom(newValues.x)
       }
       if (newValues.y) {
-        this.tweakedStepOptions.Pos_y = this.$store.getters.removeZoom(newValues.y)
+        this.tweakedStepOptions.Pos_y = this.removeZoom(newValues.y)
       }
       if (newValues.color) {
         this.tweakedStepOptions.Couleur = newValues.color

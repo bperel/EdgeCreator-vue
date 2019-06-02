@@ -24,6 +24,7 @@
 
 <script>
 import FreeTransform from 'vue-free-transform'
+import { mapGetters } from 'vuex'
 export default {
   name: 'Draggable',
   props: {
@@ -46,11 +47,15 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'displayedWidth',
+      'displayedHeight'
+    ]),
     draggableBounds () {
       return {
         // FIXME externalize
         top: `${-8 * 2 + 1 + this.boundOffsetX}px`,
-        left: `${-8 * 2 + 1 + this.boundOffsetY - this.$store.getters.addZoom(this.$store.state.dimensions.width)}px`
+        left: `${-8 * 2 + 1 + this.boundOffsetY - this.displayedWidth()}px`
       }
     }
   },
@@ -75,8 +80,8 @@ export default {
   methods: {
     update (id, payload) {
       if (
-        payload.x + this.shape.width > 0 && payload.x < this.$store.getters.displayedWidth() &&
-        payload.y + this.shape.height > 0 && payload.y < this.$store.getters.displayedHeight()) {
+        payload.x + this.shape.width + this.boundOffsetX > 0 && payload.x < this.displayedWidth() &&
+        payload.y + this.shape.height + this.boundOffsetY > 0 && payload.y < this.displayedHeight()) {
         this.shape = {
           ...this.shape,
           ...payload

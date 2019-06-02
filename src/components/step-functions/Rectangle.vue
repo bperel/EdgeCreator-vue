@@ -1,8 +1,8 @@
 <template>
   <div>
     <Draggable
-        :x="$store.getters.addZoom(tweakedStepOptions.Pos_x_debut)"
-        :y="$store.getters.addZoom(tweakedStepOptions.Pos_y_debut)"
+        :x="addZoom(tweakedStepOptions.Pos_x_debut)"
+        :y="addZoom(tweakedStepOptions.Pos_y_debut)"
         :width="rectangleWidth"
         :height="rectangleHeight"
         @update-position="updatePreview">
@@ -21,6 +21,7 @@
 <script>
 import ColorPicker from '../pickers/ColorPicker'
 import Draggable from '../interactions/Draggable'
+import { mapGetters } from 'vuex'
 
 export default {
   name: 'Rectangle.vue',
@@ -28,9 +29,10 @@ export default {
     options: Object
   },
   computed: {
-    zoom () {
-      return this.$store.state.zoom
-    },
+    ...mapGetters([
+      'addZoom',
+      'removeZoom'
+    ]),
     rectangleStyle: function () {
       return {
         backgroundColor: this.tweakedStepOptions.Rempli ? this.tweakedStepOptions.Couleur : 'transparent',
@@ -38,10 +40,10 @@ export default {
       }
     },
     rectangleWidth: function () {
-      return this.$store.getters.addZoom(this.tweakedStepOptions.Pos_x_fin - this.tweakedStepOptions.Pos_x_debut)
+      return this.addZoom(this.tweakedStepOptions.Pos_x_fin - this.tweakedStepOptions.Pos_x_debut)
     },
     rectangleHeight: function () {
-      return this.$store.getters.addZoom(this.tweakedStepOptions.Pos_y_fin - this.tweakedStepOptions.Pos_y_debut)
+      return this.addZoom(this.tweakedStepOptions.Pos_y_fin - this.tweakedStepOptions.Pos_y_debut)
     }
   },
   data () {
@@ -52,16 +54,16 @@ export default {
   methods: {
     updatePreview (newValues = {}) {
       if (newValues.x) {
-        this.tweakedStepOptions.Pos_x_debut = this.$store.getters.removeZoom(newValues.x)
+        this.tweakedStepOptions.Pos_x_debut = this.removeZoom(newValues.x)
       }
       if (newValues.width) {
-        this.tweakedStepOptions.Pos_x_fin = this.$store.getters.removeZoom(newValues.x + newValues.width)
+        this.tweakedStepOptions.Pos_x_fin = this.removeZoom(newValues.x + newValues.width)
       }
       if (newValues.y) {
-        this.tweakedStepOptions.Pos_y_debut = this.$store.getters.removeZoom(newValues.y)
+        this.tweakedStepOptions.Pos_y_debut = this.removeZoom(newValues.y)
       }
       if (newValues.height) {
-        this.tweakedStepOptions.Pos_y_fin = this.$store.getters.removeZoom(newValues.y + newValues.height)
+        this.tweakedStepOptions.Pos_y_fin = this.removeZoom(newValues.y + newValues.height)
       }
       if (newValues.color) {
         this.tweakedStepOptions.Couleur = newValues.color

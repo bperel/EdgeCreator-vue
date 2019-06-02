@@ -54,6 +54,7 @@
 
 <script>
 import EdgeModelButtonList from '../buttons/EdgeModelButtonList'
+import { mapState } from 'vuex'
 
 export default {
   name: 'MenuWizard',
@@ -73,6 +74,25 @@ export default {
       edgeToEditIndex: 0
     }
   },
+  computed: {
+    ...mapState([
+      'user'
+    ]),
+    userIsEditor: function () {
+      return ['Edition', 'Admin'].includes(this.user.privilege)
+    },
+    availableActions: function () {
+      let vm = this
+      return this.actions.filter(function (action) {
+        return !(action.editorsOnly && !vm.userIsEditor)
+      })
+    }
+  },
+  methods: {
+    startModelEdit: function () {
+      this.$emit('load-model', this.edgesOngoing.concat(this.edgesPendingForEdit)[this.edgeToEditIndex].id)
+    }
+  },
   mounted () {
     const axios = require('axios')
     let vm = this
@@ -83,22 +103,6 @@ export default {
         vm.edgesOngoingOtherEditor = data.tranches_en_attente
         vm.edgesPendingForEdit = data.tranches_en_attente_d_edition
       })
-  },
-  methods: {
-    startModelEdit: function () {
-      this.$emit('load-model', this.edgesOngoing.concat(this.edgesPendingForEdit)[this.edgeToEditIndex].id)
-    }
-  },
-  computed: {
-    userIsEditor: function () {
-      return ['Edition', 'Admin'].includes(this.$store.state.user.privilege)
-    },
-    availableActions: function () {
-      let vm = this
-      return this.actions.filter(function (action) {
-        return !(action.editorsOnly && !vm.userIsEditor)
-      })
-    }
   },
   components: {
     EdgeModelButtonList

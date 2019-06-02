@@ -40,6 +40,7 @@ import Rectangle from './step-functions/Rectangle'
 import stepOptionsMixin from '../stepOptionsMixin'
 import ConfirmCancelEditWizard from './wizards/ConfirmCancelEditWizard'
 import StepPreview from './StepPreview'
+import { mapGetters } from 'vuex'
 const axios = require('axios')
 
 export default {
@@ -63,10 +64,14 @@ export default {
     }
   },
   computed: {
+    ...mapGetters([
+      'displayedWidth',
+      'displayedHeight'
+    ]),
     canvasDimensions () {
       return {
-        width: `${this.$store.state.dimensions.width * this.$store.state.zoom}px`,
-        height: `${this.$store.state.dimensions.height * this.$store.state.zoom}px`
+        width: `${this.displayedWidth()}px`,
+        height: `${this.displayedHeight()}px`
       }
     }
   },
