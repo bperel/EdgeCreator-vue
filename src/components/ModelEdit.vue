@@ -34,10 +34,6 @@ import stepOptionsMixin from '../stepOptionsMixin'
 export default {
   name: 'ModelEdit',
   mixins: [stepOptionsMixin],
-  props: {
-    model: Object,
-    zoom: Number
-  },
   data () {
     return {
       steps: [],
@@ -46,6 +42,11 @@ export default {
       dimensions: {},
       tweakedStep: undefined,
       tweakedStepOptions: {}
+    }
+  },
+  computed: {
+    zoom () {
+      return this.$store.state.zoom
     }
   },
   watch: {

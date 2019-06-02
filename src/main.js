@@ -16,11 +16,19 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
-    user: undefined
+    user: undefined,
+    zoom: 1.5,
+    model: null
   },
   mutations: {
     setUser (state, user) {
       state.user = user
+    },
+    setZoom (state, zoom) {
+      state.zoom = zoom
+    },
+    setModel (state, model) {
+      state.model = model
     }
   }
 })

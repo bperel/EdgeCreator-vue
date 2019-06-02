@@ -1,10 +1,10 @@
 <template>
   <div id="app">
     <CheckLoggedIn @retrieve-session-user="loadUser" @prompt-login="$store.commit('setUser', null)"/>
-    <Header v-if="user" :model="model" @logout="logout" @update-zoom="updateZoom" />
+    <Header v-if="user" @logout="logout" />
     <LoginWizard v-if="user === null" />
     <MenuWizard v-if="user && user.username && !model" @load-model="startModelEdit"/>
-    <ModelEdit v-if="user && user.username && model" :model="model" :zoom="zoom" />
+    <ModelEdit v-if="user && user.username && model" />
   </div>
 </template>
 
@@ -18,34 +18,27 @@ const axios = require('axios')
 
 export default {
   name: 'app',
-  data: function () {
-    return {
-      zoom: 1.5,
-      model: null
-    }
-  },
   computed: {
     user () {
       return this.$store.state.user
+    },
+    model () {
+      return this.$store.state.model
     }
   },
   methods: {
     loadUser: function (user) {
       let vm = this
       if (user && this.$route.params.modelId) {
-        this.loadModel(this.$route.params.modelId)
-          .then(() => {
-            vm.$store.commit('setUser', user)
-          })
+        this.loadModel(this.$route.params.modelId).then(() => {
+          vm.$store.commit('setUser', user)
+        })
       } else {
         vm.$store.commit('setUser', user)
       }
     },
     startModelEdit: function (modelId) {
       this.$router.push(`/model/${modelId}`)
-    },
-    updateZoom: function (newZoom) {
-      this.zoom = newZoom
     },
     loadModel: function (modelId) {
       let vm = this
@@ -60,7 +53,7 @@ export default {
             }]
           } = data
 
-          vm.model = { id, countryCode, publicationTitle, issueNumber }
+          vm.$store.commit('setModel', { id, countryCode, publicationTitle, issueNumber })
         })
     },
     logout: function () {

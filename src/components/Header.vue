@@ -6,9 +6,9 @@
         <v-slider
             data-app
             v-model="zoomKey"
-            @change="$emit('update-zoom', zoomLevels[zoomKey])"
+            @change="$store.commit('setZoom', zoomLevels[zoomKey])"
             :tick-labels="zoomLevels"
-            :max="5"
+            :max="zoomLevels.length - 1"
             ticks="always"
             tick-size="6"
             color="grey"
@@ -38,22 +38,13 @@
 </template>
 
 <script>
+const ZOOM_LEVELS = [1, 1.5, 2, 4, 6, 8]
 export default {
   name: 'Header',
-  props: {
-    model: Object
-  },
   data () {
     return {
-      zoomLevels: [
-        1,
-        1.5,
-        2,
-        4,
-        6,
-        8
-      ],
-      zoomKey: 1,
+      zoomLevels: ZOOM_LEVELS,
+      zoomKey: ZOOM_LEVELS.indexOf(this.$store.state.zoom),
       menuItems: [
         {
           icon: 'images/home.png',
@@ -87,8 +78,8 @@ export default {
     }
   },
   computed: {
-    zoom: function () {
-      return this.zoomLevels[this.zoomKey]
+    model () {
+      return this.$store.state.model
     }
   }
 }
