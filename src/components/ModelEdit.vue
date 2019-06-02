@@ -1,10 +1,9 @@
 <template>
-  <v-flex v-if="dimensions.width && steps.length" justify-space-between id="current-steps-and-preview">
+  <v-flex v-if="dimensions && steps.length" justify-space-between id="current-steps-and-preview">
       <v-layout wrap id="current-steps">
           <EditableStepPreview v-for="step in steps" :key="step.Ordre"
               :stepNumber="step.Ordre"
               :stepFunctionName="step.Nom_fonction"
-              :dimensions="dimensions"
               :editing="editingStep === step.Ordre"
               :shouldLoad="steps[loadingStepPreview] && steps[loadingStepPreview].Ordre === step.Ordre"
               @step-preview-loaded="loadNextStepPreview"
@@ -37,7 +36,6 @@ export default {
       steps: [],
       editingStep: null,
       loadingStepPreview: null,
-      dimensions: {},
       tweakedStep: undefined,
       tweakedStepOptions: {}
     }
@@ -45,6 +43,9 @@ export default {
   computed: {
     zoom () {
       return this.$store.state.zoom
+    },
+    dimensions () {
+      return this.$store.state.dimensions
     }
   },
   watch: {
@@ -64,10 +65,10 @@ export default {
     axios.post('/parametrageg_wizard/index/-1')
       .then(function ({ data }) {
         let dimensions = vm.convertToSimpleOptions(data)
-        vm.dimensions = {
+        vm.$store.commit('setDimensions', {
           width: parseInt(dimensions.Dimension_x),
           height: parseInt(dimensions.Dimension_y)
-        }
+        })
       })
   },
   methods: {

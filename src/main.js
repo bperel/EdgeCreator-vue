@@ -18,7 +18,8 @@ const store = new Vuex.Store({
   state: {
     user: undefined,
     zoom: 1.5,
-    model: null
+    model: null,
+    dimensions: null
   },
   mutations: {
     setUser (state, user) {
@@ -29,6 +30,9 @@ const store = new Vuex.Store({
     },
     setModel (state, model) {
       state.model = model
+    },
+    setDimensions (state, dimensions) {
+      state.dimensions = dimensions
     }
   },
   getters: {

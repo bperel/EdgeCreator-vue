@@ -10,7 +10,7 @@
     <v-sheet color="transparent" width="100%">
       <v-flex d-flex justify-start align-top>
         <img v-if="loadPreview" v-show="!editing" :src="previewUrl" @load="$emit('step-preview-loaded')"/>
-        <div v-show="editing" ref="canvas" class="empty-canvas" :style="{width: `${dimensions.width*zoom}px`, height: `${dimensions.height*zoom}px`}"></div>
+        <div v-show="editing" ref="canvas" class="empty-canvas" :style="canvasDimensions"></div>
         <v-layout v-if="editing" d-flex column align-content-space-between class="step-options-wrapper">
           <v-sheet>
             <div v-switch="stepFunctionName">
@@ -51,9 +51,6 @@ export default {
     shouldLoad: Boolean,
     stepFunctionName: String
   },
-  mounted () {
-    this.loadPreview = this.shouldLoad
-  },
   data () {
     return {
       cancelEditRequested: false,
@@ -63,6 +60,14 @@ export default {
       }, {
         id: 'validate', title: 'Valider', click: this.requestCancelEditing
       }]
+    }
+  },
+  computed: {
+    canvasDimensions () {
+      return {
+        width: `${this.$store.state.dimensions.width * this.$store.state.zoom}px`,
+        height: `${this.$store.state.dimensions.height * this.$store.state.zoom}px`
+      }
     }
   },
   watch: {
@@ -95,6 +100,9 @@ export default {
       this.tweakedOptions = Object.assign({}, newOptions)
       this.$emit('tweak-options', this.tweakedOptions)
     }
+  },
+  mounted () {
+    this.loadPreview = this.shouldLoad
   },
   components: {
     ConfirmCancelEditWizard,
