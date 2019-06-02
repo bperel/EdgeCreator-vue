@@ -5,10 +5,6 @@
         :y="$store.getters.addZoom(tweakedStepOptions.Pos_y_debut)"
         :width="rectangleWidth"
         :height="rectangleHeight"
-        :boundX="previewBounds.left"
-        :boundY="previewBounds.top"
-        :boundWidth="previewBounds.width"
-        :boundHeight="previewBounds.height"
         @update-position="updatePreview">
       <div class="rectangle" :style="{...rectangleStyle, width: `${rectangleWidth}px`, height: `${rectangleHeight}px`}"/>
     </Draggable>
@@ -29,17 +25,11 @@ import Draggable from '../interactions/Draggable'
 export default {
   name: 'Rectangle.vue',
   props: {
-    options: Object,
-    canvasRef: {
-      default: null
-    }
+    options: Object
   },
   computed: {
     zoom () {
       return this.$store.state.zoom
-    },
-    previewBounds: function () {
-      return this.canvasRef.getBoundingClientRect()
     },
     rectangleStyle: function () {
       return {

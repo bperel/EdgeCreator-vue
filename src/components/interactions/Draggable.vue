@@ -1,5 +1,5 @@
 <template>
-  <div class="workspace" :style="{left: `${boundX + 1}px`, top: `${boundY + 1}px`}" ref="workspace">
+  <div class="workspace" :style="draggableBounds" ref="workspace">
     <FreeTransform
         :width="shape.width"
         :height="shape.height"
@@ -29,30 +29,54 @@ export default {
   props: {
     x: Number,
     y: Number,
-    boundX: Number,
-    boundY: Number,
-    boundWidth: Number,
-    boundHeight: Number,
+    boundOffsetX: {
+      default: 0
+    },
+    boundOffsetY: {
+      default: 0
+    },
     width: Number,
     height: Number
   },
   data () {
     return {
-      shape: {
-        x: this.x,
-        y: this.y,
-        width: this.width,
-        height: this.height
-      },
+      shape: {},
       offsetX: 0,
       offsetY: 0
+    }
+  },
+  computed: {
+    draggableBounds () {
+      return {
+        // FIXME externalize
+        top: `${-8 * 2 + 1 + this.boundOffsetX}px`,
+        left: `${-8 * 2 + 1 + this.boundOffsetY - this.$store.getters.addZoom(this.$store.state.dimensions.width)}px`
+      }
+    }
+  },
+  watch: {
+    x: {
+      immediate: true,
+      handler (newVal) { this.shape.x = newVal }
+    },
+    y: {
+      immediate: true,
+      handler (newVal) { this.shape.y = newVal }
+    },
+    width: {
+      immediate: true,
+      handler (newVal) { this.shape.width = newVal }
+    },
+    height: {
+      immediate: true,
+      handler (newVal) { this.shape.height = newVal }
     }
   },
   methods: {
     update (id, payload) {
       if (
-        payload.x + this.width > 0 && payload.x < this.boundWidth &&
-        payload.y + this.height > 0 && payload.y < this.boundHeight) {
+        payload.x + this.shape.width > 0 && payload.x < this.$store.getters.displayedWidth() &&
+        payload.y + this.shape.height > 0 && payload.y < this.$store.getters.displayedHeight()) {
         this.shape = {
           ...this.shape,
           ...payload
@@ -79,7 +103,7 @@ export default {
 
 <style scoped>
   .workspace {
-    position: fixed;
+    position: absolute;
   }
 
   .tr-transform--active {

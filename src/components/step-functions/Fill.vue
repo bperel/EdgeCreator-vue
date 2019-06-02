@@ -5,10 +5,8 @@
         :y="$store.getters.addZoom(tweakedStepOptions.Pos_y)"
         :width="CROSS_SIZE"
         :height="CROSS_SIZE"
-        :boundX="previewBounds.left - CROSS_SIZE / 2"
-        :boundY="previewBounds.top - CROSS_SIZE / 2"
-        :boundWidth="previewBounds.width"
-        :boundHeight="previewBounds.height"
+        :boundOffsetX="- CROSS_SIZE / 2"
+        :boundOffsetY="- CROSS_SIZE / 2"
         @update-position="updatePreview">
       <img class="fill-point" src="images/cross.png"/>
     </Draggable>
@@ -29,15 +27,7 @@ import Draggable from '../interactions/Draggable'
 export default {
   name: 'Fill.vue',
   props: {
-    options: Object,
-    canvasRef: {
-      default: null
-    }
-  },
-  computed: {
-    previewBounds: function () {
-      return this.canvasRef.getBoundingClientRect()
-    }
+    options: Object
   },
   data () {
     return {

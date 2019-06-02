@@ -41,7 +41,9 @@ const store = new Vuex.Store({
     },
     removeZoom: (state) => value => {
       return parseInt(value / state.zoom)
-    }
+    },
+    displayedWidth: (state, getters) => () => getters.addZoom(state.dimensions.width),
+    displayedHeight: (state, getters) => () => getters.addZoom(state.dimensions.height)
   }
 })
 
