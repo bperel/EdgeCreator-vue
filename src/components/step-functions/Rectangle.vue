@@ -1,38 +1,35 @@
 <template>
-  <div>
-    <Draggable
-        :x="addZoom(tweakedStepOptions.Pos_x_debut)"
-        :y="addZoom(tweakedStepOptions.Pos_y_debut)"
-        :width="rectangleWidth"
-        :height="rectangleHeight"
-        @update-position="updatePreview">
-      <div class="rectangle" :style="{...rectangleStyle, width: `${rectangleWidth}px`, height: `${rectangleHeight}px`}"/>
-    </Draggable>
-    <v-alert outline color="blue" type="info" value="1" style="background: white">
+  <StepFunction>
+    <template #canvas-override>
+      <Draggable
+          :x="addZoom(tweakedStepOptions.Pos_x_debut)"
+          :y="addZoom(tweakedStepOptions.Pos_y_debut)"
+          :width="rectangleWidth"
+          :height="rectangleHeight"
+          @update-position="updatePreview">
+        <div class="rectangle" :style="{...rectangleStyle, width: `${rectangleWidth}px`, height: `${rectangleHeight}px`}"/>
+      </Draggable>
+    </template>
+    <template #instructions>
       <ul>
         <li>Déplacez et redimensionnez le rectangle.</li>
         <li>Sélectionnez une couleur pour modifier la couleur de remplissage ou de contour.</li>
       </ul>
-    </v-alert>
+    </template>
+
     <ColorPicker :color="tweakedStepOptions.Couleur" @update-color="updatePreview"/>
-  </div>
+  </StepFunction>
 </template>
 
 <script>
 import ColorPicker from '../pickers/ColorPicker'
 import Draggable from '../interactions/Draggable'
-import { mapGetters } from 'vuex'
+import StepFunction from '../StepFunction'
 
 export default {
   name: 'Rectangle.vue',
-  props: {
-    options: Object
-  },
+  extends: StepFunction,
   computed: {
-    ...mapGetters([
-      'addZoom',
-      'removeZoom'
-    ]),
     rectangleStyle: function () {
       return {
         backgroundColor: this.tweakedStepOptions.Rempli ? this.tweakedStepOptions.Couleur : 'transparent',
@@ -44,11 +41,6 @@ export default {
     },
     rectangleHeight: function () {
       return this.addZoom(this.tweakedStepOptions.Pos_y_fin - this.tweakedStepOptions.Pos_y_debut)
-    }
-  },
-  data () {
-    return {
-      tweakedStepOptions: { ...this.options }
     }
   },
   methods: {
@@ -73,6 +65,7 @@ export default {
     }
   },
   components: {
+    StepFunction,
     ColorPicker,
     Draggable
   }
@@ -80,11 +73,4 @@ export default {
 </script>
 
 <style>
-  ul {
-    color: black;
-  }
-
-  .fill-point {
-    position: absolute;
-  }
 </style>

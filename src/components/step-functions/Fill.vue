@@ -1,45 +1,41 @@
 <template>
-  <div>
-    <Draggable
-        :x="addZoom(tweakedStepOptions.Pos_x)"
-        :y="addZoom(tweakedStepOptions.Pos_y)"
-        :width="CROSS_SIZE"
-        :height="CROSS_SIZE"
-        :boundOffsetX="- CROSS_SIZE / 2"
-        :boundOffsetY="- CROSS_SIZE / 2"
-        @update-position="updatePreview">
-      <img class="fill-point" src="images/cross.png"/>
-    </Draggable>
-    <v-alert outline color="blue" type="info" value="1" style="background: white">
+  <StepFunction>
+    <template #canvas-override>
+      <Draggable
+          :x="addZoom(tweakedStepOptions.Pos_x)"
+          :y="addZoom(tweakedStepOptions.Pos_y)"
+          :width="CROSS_SIZE"
+          :height="CROSS_SIZE"
+          :boundOffsetX="- CROSS_SIZE / 2"
+          :boundOffsetY="- CROSS_SIZE / 2"
+          @update-position="updatePreview">
+        <img class="fill-point" src="images/cross.png"/>
+      </Draggable>
+    </template>
+    <template #instructions>
       <ul>
         <li>Déplacez le curseur en forme de croix pour modifier le point de remplissage.</li>
         <li>Sélectionnez une couleur pour modifier la couleur de remplissage.</li>
       </ul>
-    </v-alert>
+    </template>
+
     <ColorPicker :color="tweakedStepOptions.Couleur" @update-color="updatePreview"/>
-  </div>
+  </StepFunction>
 </template>
 
 <script>
 import ColorPicker from '../pickers/ColorPicker'
 import Draggable from '../interactions/Draggable'
-import { mapGetters } from 'vuex'
+import StepFunction from '../StepFunction'
 
 export default {
   name: 'Fill.vue',
-  props: {
-    options: Object
-  },
+  extends: StepFunction,
   data () {
     return {
-      CROSS_SIZE: 10,
-      tweakedStepOptions: { ...this.options }
+      CROSS_SIZE: 10
     }
   },
-  computed: mapGetters([
-    'addZoom',
-    'removeZoom'
-  ]),
   methods: {
     updatePreview (newValues = {}) {
       if (newValues.x) {
@@ -56,6 +52,7 @@ export default {
     }
   },
   components: {
+    StepFunction,
     ColorPicker,
     Draggable
   }
@@ -63,10 +60,6 @@ export default {
 </script>
 
 <style>
-  ul {
-    color: black;
-  }
-
   .fill-point {
     position: absolute;
     background: linear-gradient(135deg, #0FF0B3 0%,#036ED9 100%);

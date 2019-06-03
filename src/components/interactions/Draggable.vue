@@ -16,7 +16,7 @@
         @mouseup="$emit('update-position', shape)"
     >
       <div :style="getElementStyles(shape)">
-        <slot></slot>
+        <slot />
       </div>
     </FreeTransform>
   </div>
