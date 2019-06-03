@@ -6,8 +6,6 @@ import Vuex from 'vuex'
 import Vuetify from 'vuetify'
 import 'vuetify/dist/vuetify.min.css'
 
-import VSwitch from 'v-switch-case'
-
 import VueRouter from 'vue-router'
 
 import App from './App.vue'
@@ -48,8 +46,6 @@ const store = new Vuex.Store({
 })
 
 Vue.use(Vuetify)
-
-Vue.use(VSwitch)
 
 Vue.use(VueRouter)
 const routes = [
