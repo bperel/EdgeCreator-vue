@@ -1,13 +1,13 @@
 <template>
   <StepFunction>
     <template #canvas-override>
-      <Draggable
+      <Draggable :scalable="true"
           :x="addZoom(tweakedStepOptions.Pos_x_debut)"
           :y="addZoom(tweakedStepOptions.Pos_y_debut)"
           :width="rectangleWidth"
           :height="rectangleHeight"
           @update-position="updatePreview">
-        <div class="rectangle" :style="{...rectangleStyle, width: `${rectangleWidth}px`, height: `${rectangleHeight}px`}"/>
+        <div :style="{...rectangleStyle, width: `${rectangleWidth}px`, height: `${rectangleHeight}px`}"/>
       </Draggable>
     </template>
     <template #instructions>
@@ -18,6 +18,7 @@
     </template>
 
     <ColorPicker :color="tweakedStepOptions.Couleur" @update-color="updatePreview"/>
+    <label>Rectangle rempli :&nbsp;<input type="checkbox" v-model="tweakedStepOptions.Rempli" @change="updatePreview"/></label>
   </StepFunction>
 </template>
 
@@ -60,6 +61,9 @@ export default {
       if (newValues.color) {
         this.tweakedStepOptions.Couleur = newValues.color
       }
+      if (newValues.filled) {
+        this.tweakedStepOptions.Rempli = newValues.filled
+      }
 
       this.$emit('options-changed', this.tweakedStepOptions)
     }
@@ -73,4 +77,8 @@ export default {
 </script>
 
 <style>
+  label {
+    display: flex;
+    align-items: center;
+  }
 </style>

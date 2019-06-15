@@ -93,7 +93,7 @@ export default {
         })
     },
     requestCancelEditing: function () {
-      if (!this.tweakedOptions || this.stepOptions === this.tweakedOptions) {
+      if (!this.tweakedOptions || this.tweakedOptions === {} || this.stepOptions === this.tweakedOptions) {
         this.$emit('stop-editing')
       } else {
         this.cancelEditRequested = true

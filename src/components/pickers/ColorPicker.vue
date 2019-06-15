@@ -1,6 +1,6 @@
 <template>
   <v-flex>
-    <label>Sélectionnez une couleur :
+    <label>Couleur :
       <input :value="color" @input="$emit('update-color', { color: $event.target.value})" type="color" />
     </label>
   </v-flex>
