@@ -14,34 +14,33 @@ Vue.use(Vuex)
 
 const store = new Vuex.Store({
   state: {
+    edgesRoot: 'http://localhost:8000/edges', // FIXME
     user: undefined,
     zoom: 1.5,
     model: null,
     dimensions: null
   },
   mutations: {
-    setUser (state, user) {
-      state.user = user
-    },
-    setZoom (state, zoom) {
-      state.zoom = zoom
-    },
-    setModel (state, model) {
-      state.model = model
-    },
-    setDimensions (state, dimensions) {
-      state.dimensions = dimensions
-    }
+    setUser (state, user) { state.user = user },
+    setZoom (state, zoom) { state.zoom = zoom },
+    setModel (state, model) { state.model = model },
+    setDimensions (state, dimensions) { state.dimensions = dimensions }
   },
   getters: {
-    addZoom: (state) => value => {
-      return parseFloat(value) * state.zoom
-    },
-    removeZoom: (state) => value => {
-      return parseInt(value / state.zoom)
-    },
-    displayedWidth: (state, getters) => () => getters.addZoom(state.dimensions.width),
-    displayedHeight: (state, getters) => () => getters.addZoom(state.dimensions.height)
+    getElementUrl: (state) => fileName =>
+      `${state.edgesRoot}/${state.model.countryCode}/elements/${fileName}`,
+
+    addZoom: (state) => value =>
+      parseFloat(value) * state.zoom,
+
+    removeZoom: (state) => value =>
+      parseInt(value / state.zoom),
+
+    displayedWidth: (state, getters) => () =>
+      getters.addZoom(state.dimensions.width),
+
+    displayedHeight: (state, getters) => () =>
+      getters.addZoom(state.dimensions.height)
   }
 })
 

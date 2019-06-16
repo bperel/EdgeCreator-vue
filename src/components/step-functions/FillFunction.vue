@@ -29,7 +29,7 @@ import Draggable from '../interactions/Draggable'
 import StepFunction from '../StepFunction'
 
 export default {
-  name: 'Fill.vue',
+  name: 'FillFunction',
   extends: StepFunction,
   data () {
     return {

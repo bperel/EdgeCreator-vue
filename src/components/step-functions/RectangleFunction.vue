@@ -28,7 +28,7 @@ import Draggable from '../interactions/Draggable'
 import StepFunction from '../StepFunction'
 
 export default {
-  name: 'Rectangle.vue',
+  name: 'RectangleFunction',
   extends: StepFunction,
   computed: {
     rectangleStyle: function () {

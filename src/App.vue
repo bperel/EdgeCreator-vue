@@ -49,12 +49,13 @@ export default {
             tranches_en_cours: [{
               id,
               pays: countryCode,
+              magazine: publicationCodeShort,
               magazine_complet: publicationTitle,
               numero: issueNumber
             }]
           } = data
 
-          vm.setModel({ id, countryCode, publicationTitle, issueNumber })
+          vm.setModel({ id, countryCode, publicationCodeShort, publicationTitle, issueNumber })
         })
     },
     logout: function () {

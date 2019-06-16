@@ -1,6 +1,6 @@
 <template>
   <v-flex v-if="dimensions && steps.length" justify-space-between id="current-steps-and-preview">
-      <v-layout wrap id="current-steps">
+      <v-layout id="current-steps">
           <EditableStepPreview v-for="step in steps" :key="step.Ordre"
               :stepNumber="step.Ordre"
               :stepFunctionName="step.Nom_fonction"

@@ -13,8 +13,7 @@
         <div v-show="editing" ref="canvas" class="empty-canvas" :style="canvasDimensions"></div>
         <v-layout v-if="editing" d-flex column align-content-space-between class="step-options-wrapper">
           <v-sheet>
-            <Fill v-if="stepFunctionName === 'Remplir'" :options="stepOptions" @options-changed="updatePreview" />
-            <Rectangle v-if="stepFunctionName === 'Rectangle'" :options="stepOptions" @options-changed="updatePreview" />
+            <component :is="stepFunctions[stepFunctionName]" :options="stepOptions" @options-changed="updatePreview" />
           </v-sheet>
           <v-layout justify-end style="flex-grow: 0 !important;">
             <v-btn v-for="action in availableActions" @click.stop="action.click" :key="action.id" left>
@@ -32,8 +31,7 @@
 </template>
 
 <script>
-import Fill from './step-functions/Fill'
-import Rectangle from './step-functions/Rectangle'
+import * as stepFunctions from './step-functions'
 
 import stepOptionsMixin from '../stepOptionsMixin'
 import ConfirmCancelEditWizard from './wizards/ConfirmCancelEditWizard'
@@ -52,6 +50,11 @@ export default {
   },
   data () {
     return {
+      stepFunctions: {
+        Rectangle: 'RectangleFunction',
+        Image: 'ImageFunction',
+        Remplir: 'FillFunction'
+      },
       cancelEditRequested: false,
       tweakedOptions: null,
       availableActions: [{
@@ -109,8 +112,7 @@ export default {
   },
   components: {
     ConfirmCancelEditWizard,
-    Fill,
-    Rectangle
+    ...stepFunctions
   }
 }
 </script>
