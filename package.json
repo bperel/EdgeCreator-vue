@@ -10,8 +10,8 @@
   },
   "dependencies": {
     "axios": "^0.19.0",
-    "core-js": "^2.6.8",
-    "es6-promise": "^4.2.6",
+    "core-js": "^2.6.9",
+    "es6-promise": "^4.2.8",
     "vue": "^2.6.10",
     "vue-free-transform": "https://github.com/koldunsky/vue-free-transform#c9e067d3be3b1e47a7b66f2f692b68b205da5952",
     "vue-router": "^3.0.6",
@@ -21,12 +21,12 @@
   "devDependencies": {
     "@vue/cli-plugin-babel": "^3.8.0",
     "@vue/cli-plugin-eslint": "^3.8.0",
-    "@vue/cli-service": "^3.8.0",
+    "@vue/cli-service": "^3.8.4",
     "@vue/eslint-config-standard": "^4.0.0",
     "babel-eslint": "^10.0.1",
     "eslint": "^5.16.0",
     "eslint-plugin-vue": "^5.0.0",
-    "lint-staged": "^8.1.5",
+    "lint-staged": "^8.2.1",
     "vue-template-compiler": "^2.5.21"
   },
   "eslintConfig": {
