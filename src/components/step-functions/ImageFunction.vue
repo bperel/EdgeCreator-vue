@@ -57,7 +57,6 @@ export default {
       return this.displayedWidth() * parseFloat(this.tweakedStepOptions.Compression_x)
     },
     imageHeight: function () {
-      console.log('image height')
       return this.displayedWidth() * parseFloat(this.tweakedStepOptions.Compression_y) / this.imageRatio
     }
   },
