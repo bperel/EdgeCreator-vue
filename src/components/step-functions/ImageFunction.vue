@@ -2,21 +2,21 @@
   <StepFunction>
     <template #canvas-override>
       <Draggable :scalable="true"
-          :x="addZoom(tweakedStepOptions.Decalage_x)"
-          :y="addZoom(tweakedStepOptions.Decalage_y)"
-          :width="imageWidth"
-          :height="imageHeight"
+          :x="shownX"
+          :y="shownY"
+          :width="shownWidth"
+          :height="shownHeight"
           @update-position="updatePreview">
         <img ref="image"
              v-show="loaded"
              @load="loaded = true; calculateImageRatio($refs.image)"
              :src="getElementUrl(tweakedStepOptions.Source)"
-             :style="{width: `${imageWidth}px`, height: `${imageHeight}px`}"/>
+             :style="{width: '100%', height: '100%'}"/>
       </Draggable>
     </template>
     <template #instructions>
       <ul>
-        <li>Modifiez, déplacez et redimensionnez l'image incrustée.</li>
+        Modifiez, déplacez et redimensionnez l'image incrustée.
       </ul>
     </template>
 
@@ -53,36 +53,42 @@ export default {
       'displayedWidth',
       'displayedHeight'
     ]),
-    imageWidth: function () {
+    shownX () {
+      return this.addZoom(this.tweakedStepOptions.Decalage_x) + this.shownWidth / 2
+    },
+    shownY () {
+      return this.addZoom(this.tweakedStepOptions.Decalage_y) + this.shownHeight / 2
+    },
+    shownWidth () {
       return this.displayedWidth() * parseFloat(this.tweakedStepOptions.Compression_x)
     },
-    imageHeight: function () {
-      return this.displayedWidth() * parseFloat(this.tweakedStepOptions.Compression_y) / this.imageRatio
+    shownHeight () {
+      return this.displayedWidth() * parseFloat(this.tweakedStepOptions.Compression_y) / this.imageSourceRatio
     }
   },
   data: () => {
     return {
       loaded: false,
-      imageRatio: 1,
+      imageSourceRatio: 1,
       showImageGalleryDialog: false
     }
   },
   methods: {
     calculateImageRatio (ref) {
-      this.imageRatio = ref.naturalWidth / ref.naturalHeight
+      this.imageSourceRatio = ref.naturalWidth / ref.naturalHeight
     },
     updatePreview (newValues = {}) {
       if (newValues.x) {
         this.tweakedStepOptions.Decalage_x = this.removeZoom(newValues.x)
       }
-      if (newValues.width) {
-        this.tweakedStepOptions.Compression_x = newValues.width / this.displayedWidth()
+      if (newValues.w) {
+        this.tweakedStepOptions.Compression_x = newValues.w / this.displayedWidth()
       }
       if (newValues.y) {
         this.tweakedStepOptions.Decalage_y = this.removeZoom(newValues.y)
       }
-      if (newValues.height) {
-        this.tweakedStepOptions.Pos_y_fin = this.removeZoom(newValues.y + newValues.height)
+      if (newValues.h) {
+        this.tweakedStepOptions.Compression_y = this.tweakedStepOptions.Compression_x * (this.imageSourceRatio / (newValues.w / newValues.h))
       }
       if (newValues.source) {
         this.tweakedStepOptions.Source = newValues.source

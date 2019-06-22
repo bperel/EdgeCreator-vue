@@ -9,6 +9,7 @@ import 'vuetify/dist/vuetify.min.css'
 import VueRouter from 'vue-router'
 
 import App from './App.vue'
+import drr from '@minogin/vue-drag-resize-rotate'
 
 Vue.use(Vuex)
 
@@ -43,6 +44,8 @@ const store = new Vuex.Store({
       getters.addZoom(state.dimensions.height)
   }
 })
+
+Vue.component('drr', drr)
 
 Vue.use(Vuetify)
 
