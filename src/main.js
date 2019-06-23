@@ -16,6 +16,7 @@ Vue.use(Vuex)
 const store = new Vuex.Store({
   state: {
     edgesRoot: 'http://localhost:8000/edges', // FIXME
+    zoomLevels: [1, 1.5, 2, 4, 6, 8],
     user: undefined,
     zoom: 1.5,
     model: null,

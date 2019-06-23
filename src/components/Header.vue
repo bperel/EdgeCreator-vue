@@ -1,6 +1,6 @@
 <template>
   <v-flex justify-space-between align-center id="header">
-    <div :class="{invisible: !model}">
+    <div :class="{invisible: !model || zoomKey === null}">
       <v-flex align-center class="zoom-wrapper">
         <v-label>Zoom :</v-label>
         <v-slider
@@ -40,13 +40,11 @@
 <script>
 import { mapMutations, mapState } from 'vuex'
 
-const ZOOM_LEVELS = [1, 1.5, 2, 4, 6, 8]
 export default {
   name: 'Header',
   data () {
     return {
-      zoomLevels: ZOOM_LEVELS,
-      zoomKey: ZOOM_LEVELS.indexOf(this.zoom),
+      zoomKey: null,
       menuItems: [
         {
           icon: 'images/home.png',
@@ -81,11 +79,16 @@ export default {
   },
   computed: mapState([
     'model',
-    'user'
+    'user',
+    'zoom',
+    'zoomLevels'
   ]),
   methods: mapMutations([
     'setZoom'
-  ])
+  ]),
+  mounted () {
+    this.zoomKey = this.zoomLevels.indexOf(this.zoom)
+  }
 }
 </script>
 
