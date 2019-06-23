@@ -1,13 +1,15 @@
 <template>
   <StepFunction>
     <template #canvas-override>
-      <Draggable :scalable="true"
+      <Draggable
+          :scalable="true"
+          :rotatable="false"
           :x="addZoom(tweakedStepOptions.Pos_x_debut)"
           :y="addZoom(tweakedStepOptions.Pos_y_debut)"
-          :width="rectangleWidth"
-          :height="rectangleHeight"
+          :width="shownWidth"
+          :height="shownHeight"
           @update-position="updatePreview">
-        <div :style="{...rectangleStyle, width: `${rectangleWidth}px`, height: `${rectangleHeight}px`}"/>
+        <div :style="{...rectangleStyle, width: '100%', height: '100%'}"/>
       </Draggable>
     </template>
     <template #instructions>
@@ -37,10 +39,10 @@ export default {
         outline: this.tweakedStepOptions.Rempli ? 'none' : `1px solid ${this.tweakedStepOptions.Couleur}`
       }
     },
-    rectangleWidth: function () {
+    shownWidth: function () {
       return this.addZoom(this.tweakedStepOptions.Pos_x_fin - this.tweakedStepOptions.Pos_x_debut)
     },
-    rectangleHeight: function () {
+    shownHeight: function () {
       return this.addZoom(this.tweakedStepOptions.Pos_y_fin - this.tweakedStepOptions.Pos_y_debut)
     }
   },
@@ -49,14 +51,14 @@ export default {
       if (newValues.x) {
         this.tweakedStepOptions.Pos_x_debut = this.removeZoom(newValues.x)
       }
-      if (newValues.width) {
-        this.tweakedStepOptions.Pos_x_fin = this.removeZoom(newValues.x + newValues.width)
+      if (newValues.w) {
+        this.tweakedStepOptions.Pos_x_fin = this.removeZoom(newValues.x + newValues.w)
       }
       if (newValues.y) {
         this.tweakedStepOptions.Pos_y_debut = this.removeZoom(newValues.y)
       }
-      if (newValues.height) {
-        this.tweakedStepOptions.Pos_y_fin = this.removeZoom(newValues.y + newValues.height)
+      if (newValues.h) {
+        this.tweakedStepOptions.Pos_y_fin = this.removeZoom(newValues.y + newValues.h)
       }
       if (newValues.color) {
         this.tweakedStepOptions.Couleur = newValues.color

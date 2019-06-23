@@ -1,13 +1,12 @@
 <template>
-  <div class="workspace" :style="offset" ref="workspace">
+  <div class="workspace" :style="offset">
     <drr
-        :class="{rotatable, scalable}"
+        :rotatable="rotatable"
+        :scalable="scalable"
         :w="shape.width"
         :h="shape.height"
         :x="shape.x"
         :y="shape.y"
-        :offset-x="offsetX"
-        :offset-y="offsetY"
         :angle="shape.angle"
         :styles="{width: shape.width, height: shape.height}"
         @change="$emit('update-position', $event)"
@@ -48,8 +47,8 @@ export default {
     offset () {
       return {
         // FIXME externalize
-        top: `-15px`,
-        left: `${-15 - this.displayedWidth()}px`
+        top: `${-15 + this.height / 2}px`,
+        left: `${-15 + this.width / 2 - this.displayedWidth()}px`
       }
     }
   },
@@ -74,10 +73,6 @@ export default {
       immediate: true,
       handler (newVal) { this.shape.angle = newVal }
     }
-  },
-  mounted () {
-    this.offsetX = this.$refs.workspace.offsetLeft
-    this.offsetY = this.$refs.workspace.offsetTop
   }
 }
 </script>

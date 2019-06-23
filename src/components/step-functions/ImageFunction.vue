@@ -1,7 +1,9 @@
 <template>
   <StepFunction>
     <template #canvas-override>
-      <Draggable :scalable="true"
+      <Draggable
+          :scalable="true"
+          :rotatable="false"
           :x="shownX"
           :y="shownY"
           :width="shownWidth"
@@ -54,10 +56,10 @@ export default {
       'displayedHeight'
     ]),
     shownX () {
-      return this.addZoom(this.tweakedStepOptions.Decalage_x) + this.shownWidth / 2
+      return this.addZoom(this.tweakedStepOptions.Decalage_x)
     },
     shownY () {
-      return this.addZoom(this.tweakedStepOptions.Decalage_y) + this.shownHeight / 2
+      return this.addZoom(this.tweakedStepOptions.Decalage_y)
     },
     shownWidth () {
       return this.displayedWidth() * parseFloat(this.tweakedStepOptions.Compression_x)
@@ -96,9 +98,6 @@ export default {
 
       this.$emit('options-changed', this.tweakedStepOptions)
     }
-  },
-  mounted: () => {
-
   },
   components: {
     ImageGalleryWizard,
