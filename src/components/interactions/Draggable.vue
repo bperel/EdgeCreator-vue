@@ -3,6 +3,7 @@
     <drr
         :rotatable="rotatable"
         :scalable="scalable"
+        :selected="true"
         :w="shape.width"
         :h="shape.height"
         :x="shape.x"
