@@ -1,11 +1,5 @@
 <template>
-    <div v-if="username !== undefined && !username" class="wizard" title="Session expirée">
-        <p>
-            Votre session a expiré.
-            <br />
-            Retour à la page d'accueil d'EdgeCreator.
-        </p>
-    </div>
+    <div></div>
 </template>
 
 <script>
