@@ -33,6 +33,7 @@
         <ImageGalleryWizard
             v-if="showImageGalleryDialog"
             :type="'Source'"
+            :selected="tweakedStepOptions.Source"
             @select-image="updatePreview({source: $event}); showImageGalleryDialog = false"
         />
       </v-dialog>

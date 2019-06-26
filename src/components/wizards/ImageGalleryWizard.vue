@@ -33,7 +33,7 @@
                         @error="loadingItem++"
                         contain
                         aspect-ratio="1"
-                        class="grey lighten-2"
+                        :class="{grey: true, 'lighten-2': true, selected: item.replace(/.+\/([^\/]+)$/, '$1') === selected}"
                     >
                       <template v-slot:placeholder>
                         <v-layout
@@ -72,7 +72,8 @@ require('@uppy/dashboard/dist/style.css')
 export default {
   name: 'ImageGalleryWizard',
   props: {
-    type: String
+    type: String,
+    selected: String
   },
   data: () => {
     return {
@@ -137,6 +138,16 @@ export default {
   .thumbnail {
     flex-direction: column;
   }
+  .thumbnail > .v-card {
+    transition-duration: 0.2s;
+  }
+  .thumbnail > .v-card .v-image.selected {
+    outline: 4px solid black;
+  }
+  .thumbnail > .v-card:hover {
+    outline: 4px solid gray;
+  }
+
   .thumbnail > * {
     cursor: pointer;
   }
