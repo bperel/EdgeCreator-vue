@@ -54,7 +54,8 @@ export default {
       stepFunctions: {
         Rectangle: 'RectangleFunction',
         Image: 'ImageFunction',
-        Remplir: 'FillFunction'
+        Remplir: 'FillFunction',
+        TexteMyFonts: 'TextFunction'
       },
       cancelEditRequested: false,
       tweakedOptions: null,

@@ -1,6 +1,6 @@
 <template>
   <v-flex>
-    <label>Couleur :
+    <label>{{ label }} :
       <input :value="color" @input="$emit('update-color', { color: $event.target.value})" type="color" />
     </label>
   </v-flex>
@@ -10,7 +10,10 @@
 export default {
   name: 'ColorPicker',
   props: {
-    color: String
+    color: String,
+    label: {
+      default: 'Couleur'
+    }
   }
 }
 </script>
