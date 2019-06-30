@@ -18,16 +18,18 @@ export default {
       }
       return simpleOptions
     },
-    convertFromSimpleOptions: function (options) {
-      for (let key in options) {
-        if (options.hasOwnProperty(key)) {
+    convertFromSimpleOptions: function (simpleOptions) {
+      let options = {}
+      for (let key in simpleOptions) {
+        if (simpleOptions.hasOwnProperty(key)) {
+          options[key] = simpleOptions[key]
           if (key.indexOf('Couleur') === 0) {
-            options[key] = options[key].replace('#', '')
+            options[key] = simpleOptions[key].replace('#', '')
           }
-          if (options[key] === true) {
+          if (simpleOptions[key] === true) {
             options[key] = 'Oui'
           }
-          if (options[key] === false) {
+          if (simpleOptions[key] === false) {
             options[key] = 'Non'
           }
         }
