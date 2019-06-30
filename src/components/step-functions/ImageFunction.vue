@@ -81,19 +81,19 @@ export default {
       this.imageSourceRatio = ref.naturalWidth / ref.naturalHeight
     },
     updatePreview (newValues = {}) {
-      if (newValues.x) {
+      if (newValues.x !== undefined) {
         this.tweakedStepOptions.Decalage_x = this.removeZoom(newValues.x)
       }
-      if (newValues.w) {
+      if (newValues.w !== undefined) {
         this.tweakedStepOptions.Compression_x = newValues.w / this.displayedWidth()
       }
-      if (newValues.y) {
+      if (newValues.y !== undefined) {
         this.tweakedStepOptions.Decalage_y = this.removeZoom(newValues.y)
       }
-      if (newValues.h) {
+      if (newValues.h !== undefined) {
         this.tweakedStepOptions.Compression_y = this.tweakedStepOptions.Compression_x * (this.imageSourceRatio / (newValues.w / newValues.h))
       }
-      if (newValues.source) {
+      if (newValues.source !== undefined) {
         this.tweakedStepOptions.Source = newValues.source
       }
 

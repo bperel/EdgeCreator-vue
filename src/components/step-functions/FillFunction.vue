@@ -38,13 +38,13 @@ export default {
   },
   methods: {
     updatePreview (newValues = {}) {
-      if (newValues.x) {
+      if (newValues.x !== undefined) {
         this.tweakedStepOptions.Pos_x = this.removeZoom(newValues.x)
       }
-      if (newValues.y) {
+      if (newValues.y !== undefined) {
         this.tweakedStepOptions.Pos_y = this.removeZoom(newValues.y)
       }
-      if (newValues.color) {
+      if (newValues.color !== undefined) {
         this.tweakedStepOptions.Couleur = newValues.color
       }
 

@@ -48,22 +48,22 @@ export default {
   },
   methods: {
     updatePreview (newValues = {}) {
-      if (newValues.x) {
+      if (newValues.x !== undefined) {
         this.tweakedStepOptions.Pos_x_debut = this.removeZoom(newValues.x)
       }
-      if (newValues.w) {
+      if (newValues.w !== undefined) {
         this.tweakedStepOptions.Pos_x_fin = this.removeZoom(newValues.x + newValues.w)
       }
-      if (newValues.y) {
+      if (newValues.y !== undefined) {
         this.tweakedStepOptions.Pos_y_debut = this.removeZoom(newValues.y)
       }
-      if (newValues.h) {
+      if (newValues.h !== undefined) {
         this.tweakedStepOptions.Pos_y_fin = this.removeZoom(newValues.y + newValues.h)
       }
-      if (newValues.color) {
+      if (newValues.color !== undefined) {
         this.tweakedStepOptions.Couleur = newValues.color
       }
-      if (newValues.filled) {
+      if (newValues.filled !== undefined) {
         this.tweakedStepOptions.Rempli = newValues.filled
       }
 
