@@ -38,10 +38,12 @@
       />
       <ColorPicker
           :color="tweakedStepOptions.Couleur_texte"
+          fieldName="textColor"
           label="Couleur du texte"
           @update-color="updatePreview"/>
       <ColorPicker
           :color="tweakedStepOptions.Couleur_fond"
+          fieldName="backgroundColor"
           label="Couleur du fond"
           @update-color="updatePreview"/>
     </v-flex>
@@ -110,6 +112,12 @@ export default {
       }
       if (newValues.angle !== undefined) {
         this.tweakedStepOptions.Rotation = -1 * newValues.angle
+      }
+      if (newValues.backgroundColor !== undefined) {
+        this.tweakedStepOptions.Couleur_fond = newValues.backgroundColor
+      }
+      if (newValues.textColor !== undefined) {
+        this.tweakedStepOptions.Couleur_texte = newValues.textColor
       }
 
       this.$emit('options-changed', this.tweakedStepOptions)

@@ -1,7 +1,7 @@
 <template>
   <v-flex>
     <label>{{ label }} :
-      <input :value="color" @input="$emit('update-color', { color: $event.target.value})" type="color" />
+      <input :value="color" @input="emitColorChangeEvent" type="color" />
     </label>
   </v-flex>
 </template>
@@ -13,6 +13,16 @@ export default {
     color: String,
     label: {
       default: 'Couleur'
+    },
+    fieldName: {
+      default: 'color'
+    }
+  },
+  methods: {
+    emitColorChangeEvent ($event) {
+      let eventOptions = {}
+      eventOptions[this.fieldName] = $event.target.value
+      this.$emit('update-color', eventOptions)
     }
   }
 }
