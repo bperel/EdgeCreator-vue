@@ -3,7 +3,9 @@
     <CheckLoggedIn @retrieve-session-user="loadUser" @prompt-login="setUser(null)"/>
     <Header v-if="user" @logout="logout" />
     <LoginWizard v-if="user === null" />
-    <MenuWizard v-if="user && user.username && !model" @load-model="startModelEdit"/>
+    <v-dialog data-app v-model="showMenuDialog" persistent max-width="500px">
+      <MenuWizard @load-model="startModelEdit"/>
+    </v-dialog>
     <ModelEdit v-if="user && user.username && model" />
   </div>
 </template>
@@ -19,10 +21,15 @@ const axios = require('axios')
 
 export default {
   name: 'app',
-  computed: mapState([
-    'user',
-    'model'
-  ]),
+  computed: {
+    ...mapState([
+      'user',
+      'model'
+    ]),
+    showMenuDialog () {
+      return this.user && this.user.username && !this.model
+    }
+  },
   methods: {
     ...mapMutations([
       'setUser',
@@ -39,7 +46,7 @@ export default {
       }
     },
     startModelEdit: function (modelId) {
-      this.$router.push(`/model/${modelId}`)
+      this.$router.push({ name: 'modelEdit', params: { modelId } })
     },
     loadModel: function (modelId) {
       let vm = this

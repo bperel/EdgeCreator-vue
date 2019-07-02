@@ -42,7 +42,10 @@ const store = new Vuex.Store({
       getters.addZoom(state.dimensions.width),
 
     displayedHeight: (state, getters) => () =>
-      getters.addZoom(state.dimensions.height)
+      getters.addZoom(state.dimensions.height),
+
+    userIsEditor: (state) => () =>
+      ['Edition', 'Admin'].includes(state.user.privilege)
   }
 })
 
@@ -52,8 +55,8 @@ Vue.use(Vuetify)
 
 Vue.use(VueRouter)
 const routes = [
-  { path: '/', component: App },
-  { path: '/model/:modelId', component: App }
+  { name: 'welcome', path: '/', component: App },
+  { name: 'modelEdit', path: '/model/:modelId', component: App }
 ]
 const router = new VueRouter({
   routes

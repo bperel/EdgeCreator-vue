@@ -1,60 +1,59 @@
 <template>
-  <v-dialog data-app v-model="dialog" max-width="500px">
-    <v-card>
-      <v-card-title>
-        <span class="headline">Accueil EdgeCreator</span>
-      </v-card-title>
-      <v-card-text>
-        <p>
-          Vous êtes à présent connecté(e) sur EdgeCreator.
-        </p>
+  <v-card>
+    <v-card-title>
+      <span class="headline">Accueil EdgeCreator</span>
+    </v-card-title>
+    <v-card-text>
+      <p>
+        Vous êtes à présent connecté(e) sur EdgeCreator.
+      </p>
 
-        <div v-if="edgesOngoingOtherEditor.length">
-          <p>
-            Vos tranches en cours de conception par un autre utilisateur :
-          </p>
-          <v-btn-toggle>
-            <EdgeModelButtonList :models="edgesOngoingOtherEditor" disabled />
-          </v-btn-toggle>
-        </div>
+      <div v-if="edgesOngoingOtherEditor.length">
         <p>
-          Que voulez-vous faire ?
+          Vos tranches en cours de conception par un autre utilisateur :
         </p>
-        <v-container>
-          <v-btn-toggle v-model="currentAction">
-            <v-btn v-for="action in availableActions" :key="action.id" left :disabled="action.disabled">
-              {{ action.title }}
-            </v-btn>
-          </v-btn-toggle>
-        </v-container>
-        <div v-if="availableActions[currentAction] && availableActions[currentAction].id === 'continue'" grid-list-md>
-          <v-btn-toggle v-model="edgeToEditIndex">
-            <v-container>
-              <p>
-                Tranches en cours de conception par vous :
-              </p>
-              <EdgeModelButtonList :models="edgesOngoing" />
-            </v-container>
-            <v-container>
-              <p>
-                Tranches en attente de conception :
-              </p>
-              <EdgeModelButtonList :models="edgesPendingForEdit" />
-            </v-container>
-          </v-btn-toggle>
-        </div>
-      </v-card-text>
-      <v-card-actions>
-        <v-spacer></v-spacer>
-        <v-btn @click="loadModel()" color="blue darken-1" flat>Suivant</v-btn>
-      </v-card-actions>
-    </v-card>
-  </v-dialog>
+        <v-btn-toggle>
+          <EdgeModelButtonList :models="edgesOngoingOtherEditor" disabled />
+        </v-btn-toggle>
+      </div>
+      <p>
+        Que voulez-vous faire ?
+      </p>
+      <v-container>
+        <v-btn-toggle v-model="currentAction">
+          <v-btn v-for="action in availableActions" :key="action.id" left :disabled="action.disabled">
+            {{ action.title }}
+          </v-btn>
+        </v-btn-toggle>
+      </v-container>
+      <div v-if="availableActions[currentAction] && availableActions[currentAction].id === 'continue'" grid-list-md>
+        <v-btn-toggle v-model="edgeToEditIndex">
+          <v-container>
+            <p>
+              Tranches en cours de conception par vous :
+            </p>
+            <EdgeModelButtonList :models="edgesOngoing" />
+          </v-container>
+          <v-container>
+            <p>
+              Tranches en attente de conception :
+            </p>
+            <EdgeModelButtonList :models="edgesPendingForEdit" />
+          </v-container>
+        </v-btn-toggle>
+      </div>
+    </v-card-text>
+    <v-card-actions>
+      <v-spacer></v-spacer>
+      <v-btn @click="startModelEdit()" color="blue darken-1" flat>Suivant</v-btn>
+    </v-card-actions>
+  </v-card>
 </template>
 
 <script>
 import EdgeModelButtonList from '../buttons/EdgeModelButtonList'
-import { mapState } from 'vuex'
+import { mapGetters } from 'vuex'
+const axios = require('axios')
 
 export default {
   name: 'MenuWizard',
@@ -75,12 +74,9 @@ export default {
     }
   },
   computed: {
-    ...mapState([
-      'user'
+    ...mapGetters([
+      'userIsEditor'
     ]),
-    userIsEditor: function () {
-      return ['Edition', 'Admin'].includes(this.user.privilege)
-    },
     availableActions: function () {
       let vm = this
       return this.actions.filter(function (action) {
@@ -94,7 +90,6 @@ export default {
     }
   },
   mounted () {
-    const axios = require('axios')
     let vm = this
 
     axios.get('/tranchesencours/load')

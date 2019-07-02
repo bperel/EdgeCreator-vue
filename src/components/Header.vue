@@ -16,12 +16,14 @@
       </v-flex>
     </div>
     <v-flex v-if="model" column justify-center align-center>
-      <div class="subheading text-xs-center"><img :src="'images/flags/' + model.countryCode + '.png'" />&nbsp;{{ model.publicationTitle}} n°{{ model.issueNumber }}</div>
+      <div class="subheading text-xs-center">
+        <img :src="`images/flags/${model.countryCode}.png`" />&nbsp;
+        {{ model.publicationTitle}} n°{{ model.issueNumber }}
+      </div>
       <div class="text-xs-center">
-
         <v-tooltip bottom v-for="menuItem in menuItems" :key="menuItem.icon" data-app>
           <template v-slot:activator="{ on }">
-            <img v-on="on" class="action tip" :src="menuItem.icon" />
+            <img v-on="on" class="action tip" :src="menuItem.icon" @click="menuItem.click"/>
           </template>
           <span>{{ menuItem.title }}</span>
         </v-tooltip>
@@ -48,31 +50,38 @@ export default {
       menuItems: [
         {
           icon: 'images/home.png',
-          title: 'Revenir à l\'écran d\'accueil de EdgeCreator'
+          title: 'Revenir à l\'écran d\'accueil de EdgeCreator',
+          click: () => { this.$router.push({ name: 'welcome' }) }
         },
         {
           icon: 'images/info.png',
-          title: 'Informations sur la conception de tranche avec EdgeCreator'
+          title: 'Informations sur la conception de tranche avec EdgeCreator',
+          click: () => {}
         },
         {
           icon: 'images/dimensions.png',
-          title: 'Modifier les dimensions de la tranche'
+          title: 'Modifier les dimensions de la tranche',
+          click: () => {}
         },
         {
           icon: 'images/photo.png',
-          title: 'Insérer/Sélectionner une photo de tranche'
+          title: 'Insérer/Sélectionner une photo de tranche',
+          click: () => {}
         },
         {
           icon: 'images/clone.png',
-          title: 'Cloner depuis un autre modèle de tranche'
+          title: 'Cloner depuis un autre modèle de tranche',
+          click: () => {}
         },
         {
           icon: 'images/corbeille.png',
-          title: 'Supprimer cette conception de tranche'
+          title: 'Supprimer cette conception de tranche',
+          click: () => {}
         },
         {
           icon: 'images/valider.png',
-          title: 'Valider cette conception de tranche'
+          title: 'Valider cette conception de tranche',
+          click: () => {}
         }
       ]
     }
