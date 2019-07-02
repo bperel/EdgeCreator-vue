@@ -1,6 +1,6 @@
 <template>
   <div id="app">
-    <CheckLoggedIn @retrieve-session-user="loadUser" @prompt-login="setUser(null)"/>
+    <CheckLoggedIn @retrieve-session-user="setUser" @prompt-login="setUser(null)"/>
     <Header v-if="user" @logout="logout" />
     <LoginWizard v-if="user === null" />
     <v-dialog data-app v-model="showMenuDialog" persistent max-width="500px">
@@ -30,21 +30,20 @@ export default {
       return this.user && this.user.username && !this.model
     }
   },
+  watch: {
+    $route (to, from) {
+      if (to.params.modelId) {
+        this.loadModel(to.params.modelId)
+      } else {
+        this.setModel(null)
+      }
+    }
+  },
   methods: {
     ...mapMutations([
       'setUser',
       'setModel'
     ]),
-    loadUser: function (user) {
-      let vm = this
-      if (user && this.$route.params.modelId) {
-        this.loadModel(this.$route.params.modelId).then(() => {
-          vm.setUser(user)
-        })
-      } else {
-        vm.setUser(user)
-      }
-    },
     startModelEdit: function (modelId) {
       this.$router.push({ name: 'modelEdit', params: { modelId } })
     },
