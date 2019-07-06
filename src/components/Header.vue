@@ -1,5 +1,11 @@
 <template>
   <v-flex justify-space-between align-center id="header">
+    <v-dialog data-app v-model="showInfoDialog" max-width="500px">
+      <InfoWizard @close-dialog="showInfoDialog=false"/>
+    </v-dialog>
+    <v-dialog v-if="model" data-app v-model="showDimensionsDialog" max-width="500px">
+      <DimensionsWizard @close-dialog="showDimensionsDialog=false"/>
+    </v-dialog>
     <div :class="{invisible: !model || zoomKey === null}">
       <v-flex align-center class="zoom-wrapper">
         <v-label>Zoom :</v-label>
@@ -41,27 +47,31 @@
 
 <script>
 import { mapMutations, mapState } from 'vuex'
+import InfoWizard from './wizards/InfoWizard'
+import DimensionsWizard from './wizards/DimensionsWizard'
 
 export default {
   name: 'Header',
   data () {
     return {
       zoomKey: null,
+      showInfoDialog: false,
+      showDimensionsDialog: false,
       menuItems: [
         {
           icon: 'images/home.png',
-          title: 'Revenir à l\'écran d\'accueil de EdgeCreator',
+          title: "Revenir à l'écran d'accueil de EdgeCreator",
           click: () => { this.$router.push({ name: 'welcome' }) }
         },
         {
           icon: 'images/info.png',
           title: 'Informations sur la conception de tranche avec EdgeCreator',
-          click: () => {}
+          click: () => { this.showInfoDialog = true }
         },
         {
           icon: 'images/dimensions.png',
           title: 'Modifier les dimensions de la tranche',
-          click: () => {}
+          click: () => { this.showDimensionsDialog = true }
         },
         {
           icon: 'images/photo.png',
@@ -97,6 +107,10 @@ export default {
   ]),
   mounted () {
     this.zoomKey = this.zoomLevels.indexOf(this.zoom)
+  },
+  components: {
+    InfoWizard,
+    DimensionsWizard
   }
 }
 </script>

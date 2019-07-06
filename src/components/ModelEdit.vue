@@ -15,7 +15,6 @@
       <v-layout id="model-preview">
           <StepPreview
               :shouldLoad="true"
-              :dimensions="dimensions"
               :tweakedStep="tweakedStep"
               :tweakedStepOptions="tweakedStepOptions"
           />

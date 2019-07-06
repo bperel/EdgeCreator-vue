@@ -26,7 +26,7 @@ const store = new Vuex.Store({
     setUser (state, user) { state.user = user },
     setZoom (state, zoom) { state.zoom = zoom },
     setModel (state, model) { state.model = model },
-    setDimensions (state, dimensions) { state.dimensions = dimensions }
+    setDimensions (state, dimensions) { state.dimensions = { width: parseInt(dimensions.width), height: parseInt(dimensions.height) } }
   },
   getters: {
     getElementUrl: (state) => fileName =>

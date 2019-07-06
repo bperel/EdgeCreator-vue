@@ -15,10 +15,10 @@ export default {
   watch: {
     username: function (newValue, oldValue) {
       if (oldValue === undefined) {
-        if (newValue !== null) {
-          this.$emit('retrieve-session-user', newValue)
-        } else {
+        if (newValue === null) {
           this.$emit('prompt-login', newValue)
+        } else {
+          this.$emit('retrieve-session-user', newValue)
         }
       }
     }

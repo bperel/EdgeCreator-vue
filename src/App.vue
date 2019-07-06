@@ -31,11 +31,14 @@ export default {
     }
   },
   watch: {
-    $route (to, from) {
-      if (to.params.modelId) {
-        this.loadModel(to.params.modelId)
-      } else {
-        this.setModel(null)
+    $route: {
+      immediate: true,
+      handler (to) {
+        if (to.params.modelId) {
+          this.loadModel(to.params.modelId)
+        } else {
+          this.setModel(null)
+        }
       }
     }
   },
