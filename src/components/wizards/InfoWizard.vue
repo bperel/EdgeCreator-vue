@@ -29,11 +29,9 @@
 <script>
 export default {
   name: 'InfoWizard',
-  data: function () {
-    return {
-      dialog: true
-    }
-  }
+  data: () => ({
+    dialog: true
+  })
 }
 </script>
 

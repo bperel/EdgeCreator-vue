@@ -28,17 +28,17 @@ export default {
       const axios = require('axios')
       let vm = this
       axios.post('/check_logged_in', { responseType: 'text' })
-        .then(function (response) {
+        .then(response => {
           vm.username = (response.data || {}).username ? response.data : null
         })
-        .catch(function () {
+        .catch(() => {
           vm.username = null
         })
     }
   },
   mounted () {
     let vm = this
-    setInterval(function () {
+    setInterval(() => {
       vm.check()
     }, 1000 * 60 * vm.INTERVAL_CHECK_LOGGED_IN)
     vm.check()

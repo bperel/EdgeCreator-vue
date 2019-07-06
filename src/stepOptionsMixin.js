@@ -1,6 +1,6 @@
 export default {
   methods: {
-    convertToSimpleOptions: function (options) {
+    convertToSimpleOptions: options => {
       let simpleOptions = {}
       for (let key in options) {
         if (options.hasOwnProperty(key)) {
@@ -18,7 +18,7 @@ export default {
       }
       return simpleOptions
     },
-    convertFromSimpleOptions: function (simpleOptions) {
+    convertFromSimpleOptions: simpleOptions => {
       let options = {}
       for (let key in simpleOptions) {
         if (simpleOptions.hasOwnProperty(key)) {
@@ -36,8 +36,7 @@ export default {
       }
       return options
     },
-    objectToUrlParams: function (o) {
-      return Object.keys(o).map(key => `${key}=${encodeURIComponent(o[key])}`).join('&') || '_'
-    }
+    objectToUrlParams: o =>
+      Object.keys(o).map(key => `${key}=${encodeURIComponent(o[key])}`).join('&') || '_'
   }
 }

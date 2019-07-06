@@ -32,6 +32,9 @@ const store = new Vuex.Store({
     getElementUrl: (state) => fileName =>
       `${state.edgesRoot}/${state.model.countryCode}/elements/${fileName}`,
 
+    getPhotoUrl: (state) => fileName =>
+      `${state.edgesRoot}/${state.model.countryCode}/photos/${fileName}`,
+
     addZoom: (state) => value =>
       parseFloat(value) * state.zoom,
 

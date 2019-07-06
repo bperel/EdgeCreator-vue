@@ -92,7 +92,7 @@ export default {
     editStep: function () {
       let vm = this
       axios.post(`/parametrageg_wizard/index/${this.stepNumber}`)
-        .then(function ({ data }) {
+        .then(({ data }) => {
           vm.stepOptions = vm.convertToSimpleOptions(data)
           vm.$emit('start-editing')
         })

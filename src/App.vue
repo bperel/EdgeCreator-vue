@@ -27,7 +27,7 @@ export default {
       'model'
     ]),
     showMenuDialog () {
-      return this.user && this.user.username && !this.model
+      return this.user && this.user.username && !this.$route.params.modelId
     }
   },
   watch: {
@@ -51,9 +51,10 @@ export default {
       this.$router.push({ name: 'modelEdit', params: { modelId } })
     },
     loadModel: function (modelId) {
+      let model
       let vm = this
-      return axios.post(`/tranchesencours/load/${modelId}`)
-        .then(function ({ data }) {
+      axios.post(`/tranchesencours/load/${modelId}`)
+        .then(({ data: modelData }) => {
           let {
             tranches_en_cours: [{
               id,
@@ -62,14 +63,22 @@ export default {
               magazine_complet: publicationTitle,
               numero: issueNumber
             }]
-          } = data
+          } = modelData
 
-          vm.setModel({ id, countryCode, publicationCodeShort, publicationTitle, issueNumber })
+          model = { id, countryCode, publicationCodeShort, publicationTitle, issueNumber }
+
+          return axios.post('/photo_principale')
+        })
+        .then(({ data: photoData }) => {
+          if (photoData) {
+            model.photo = photoData
+          }
+          vm.setModel(model)
         })
     },
-    logout: function () {
+    logout: () => {
       axios.post('/edgecreatorg/logout')
-        .then(function () {
+        .then(() => {
           location.replace('/')
         })
     }

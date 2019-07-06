@@ -53,13 +53,13 @@ export default {
     const axios = require('axios')
     let vm = this
     axios.post('/parametrageg_wizard/index')
-      .then(function ({ data }) {
+      .then(({ data }) => {
         vm.steps = data.filter(step => step.Ordre !== -1) || []
         vm.loadingStepPreview = 0
       })
 
     axios.post('/parametrageg_wizard/index/-1')
-      .then(function ({ data }) {
+      .then(({ data }) => {
         let dimensions = vm.convertToSimpleOptions(data)
         vm.setDimensions({
           width: parseInt(dimensions.Dimension_x),

@@ -1,11 +1,19 @@
 <template>
   <v-flex justify-space-between align-center id="header">
-    <v-dialog data-app v-model="showInfoDialog" max-width="500px">
+    <v-dialog v-model="showInfoDialog" max-width="500px">
       <InfoWizard @close-dialog="showInfoDialog=false"/>
     </v-dialog>
-    <v-dialog v-if="model" data-app v-model="showDimensionsDialog" max-width="500px">
+    <v-dialog v-if="model" v-model="showDimensionsDialog" max-width="500px">
       <DimensionsWizard @close-dialog="showDimensionsDialog=false"/>
     </v-dialog>
+    <v-dialog v-if="model" v-model="showImageGalleryDialog" max-width="500px">
+      <ImageGalleryWizard
+        :type="'Photos'"
+        :selected="model.photo"
+        @select-image="updatePreview({source: $event}); showImageGalleryDialog = false"
+      />
+    </v-dialog>
+
     <div :class="{invisible: !model || zoomKey === null}">
       <v-flex align-center class="zoom-wrapper">
         <v-label>Zoom :</v-label>
@@ -49,6 +57,7 @@
 import { mapMutations, mapState } from 'vuex'
 import InfoWizard from './wizards/InfoWizard'
 import DimensionsWizard from './wizards/DimensionsWizard'
+import ImageGalleryWizard from './wizards/ImageGalleryWizard'
 
 export default {
   name: 'Header',
@@ -57,6 +66,7 @@ export default {
       zoomKey: null,
       showInfoDialog: false,
       showDimensionsDialog: false,
+      showImageGalleryDialog: false,
       menuItems: [
         {
           icon: 'images/home.png',
@@ -76,7 +86,7 @@ export default {
         {
           icon: 'images/photo.png',
           title: 'Insérer/Sélectionner une photo de tranche',
-          click: () => {}
+          click: () => { this.showImageGalleryDialog = true }
         },
         {
           icon: 'images/clone.png',
@@ -110,7 +120,8 @@ export default {
   },
   components: {
     InfoWizard,
-    DimensionsWizard
+    DimensionsWizard,
+    ImageGalleryWizard
   }
 }
 </script>

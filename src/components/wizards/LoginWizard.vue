@@ -30,12 +30,10 @@
 <script>
 export default {
   name: 'LoginWizard',
-  data: function () {
-    return {
-      user: {},
-      dialog: true
-    }
-  },
+  data: () => ({
+    user: {},
+    dialog: true
+  }),
   methods: {
     login: function (e) {
       const axios = require('axios')
@@ -43,7 +41,7 @@ export default {
         user: this.user.username,
         pass: this.user.password
       })
-        .then(function () {
+        .then(() => {
           location.replace('/')
         })
       e.preventDefault()

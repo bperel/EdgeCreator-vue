@@ -23,11 +23,9 @@
 <script>
 export default {
   name: 'ConfirmCancelEditWizard',
-  data: function () {
-    return {
-      dialog: true
-    }
-  }
+  data: () => ({
+    dialog: true
+  })
 }
 </script>
 

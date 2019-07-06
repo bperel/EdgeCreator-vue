@@ -28,7 +28,7 @@
                   <v-card flat tile class="d-flex">
                     <v-img
                         v-if="itemIndex <= loadingItem"
-                        :src="getElementUrl(item)"
+                        :src="type === 'Source' ? getElementUrl(item) : getPhotoUrl(item)"
                         @load="loadingItem++"
                         @error="loadingItem++"
                         contain
@@ -87,23 +87,33 @@ export default {
       'model'
     ]),
     ...mapGetters([
-      'getElementUrl'
+      'getElementUrl',
+      'getPhotoUrl'
     ])
+  },
+  methods: {
+    loadImages () {
+      let vm = this
+      axios.get(`/listerg/index/${this.type}/${this.model.countryCode}/${this.model.publicationCodeShort}`)
+        .then(({ data }) => {
+          vm.items = data
+        })
+    }
   },
   mounted () {
     const uppy = Uppy({
       meta: {
-        photo_tranche: 0,
+        photo_tranche: this.type === 'Source' ? 0 : 1,
         multiple: 0
       },
       debug: true,
       replaceTargetContent: true,
       showProgressDetails: true,
       restrictions: {
-        maxFileSize: 400000,
+        maxFileSize: this.type === 'Source' ? 400000 : 4000000,
         maxNumberOfFiles: 1,
         minNumberOfFiles: 1,
-        allowedFileTypes: ['image/png']
+        allowedFileTypes: [this.type === 'Source' ? 'image/png' : 'image/jpeg']
       }
     })
       .use(Dashboard, {
@@ -120,13 +130,10 @@ export default {
 
     uppy.on('complete', (result) => {
       console.log('Upload complete! We’ve uploaded these files:', result.successful)
+      this.loadImages()
     })
 
-    let vm = this
-    axios.get(`/listerg/index/${this.type}/${this.model.countryCode}/${this.model.publicationCodeShort}`)
-      .then(function ({ data }) {
-        vm.items = data
-      })
+    this.loadImages()
   }
 }
 </script>

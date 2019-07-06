@@ -57,31 +57,27 @@ const axios = require('axios')
 
 export default {
   name: 'MenuWizard',
-  data: function () {
-    return {
-      dialog: true,
-      currentAction: null,
-      actions: [
-        { id: 'send', title: 'Envoyer des photos de tranche', editorsOnly: false },
-        { id: 'create', title: 'Créer une tranche de magazine', editorsOnly: true },
-        { id: 'modify', title: 'Modifier une tranche de magazine', editorsOnly: true, disabled: true },
-        { id: 'continue', title: 'Concevoir une tranche de magazine', editorsOnly: true }
-      ],
-      edgesOngoing: [],
-      edgesOngoingOtherEditor: [],
-      edgesPendingForEdit: [],
-      edgeToEditIndex: 0
-    }
-  },
+  data: () => ({
+    dialog: true,
+    currentAction: null,
+    actions: [
+      { id: 'send', title: 'Envoyer des photos de tranche', editorsOnly: false },
+      { id: 'create', title: 'Créer une tranche de magazine', editorsOnly: true },
+      { id: 'modify', title: 'Modifier une tranche de magazine', editorsOnly: true, disabled: true },
+      { id: 'continue', title: 'Concevoir une tranche de magazine', editorsOnly: true }
+    ],
+    edgesOngoing: [],
+    edgesOngoingOtherEditor: [],
+    edgesPendingForEdit: [],
+    edgeToEditIndex: 0
+  }),
   computed: {
     ...mapGetters([
       'userIsEditor'
     ]),
     availableActions: function () {
       let vm = this
-      return this.actions.filter(function (action) {
-        return !(action.editorsOnly && !vm.userIsEditor)
-      })
+      return this.actions.filter(action => !(action.editorsOnly && !vm.userIsEditor))
     }
   },
   methods: {
@@ -93,7 +89,7 @@ export default {
     let vm = this
 
     axios.get('/tranchesencours/load')
-      .then(function ({ data }) {
+      .then(({ data }) => {
         vm.edgesOngoing = data.tranches_en_cours
         vm.edgesOngoingOtherEditor = data.tranches_en_attente
         vm.edgesPendingForEdit = data.tranches_en_attente_d_edition
