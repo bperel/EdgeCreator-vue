@@ -10,7 +10,7 @@
       <ImageGalleryWizard
         :type="'Photos'"
         :selected="model.photo"
-        @select-image="updatePreview({source: $event}); showImageGalleryDialog = false"
+        @select-image="updatePhoto($event); showImageGalleryDialog = false"
       />
     </v-dialog>
 
@@ -58,6 +58,7 @@ import { mapMutations, mapState } from 'vuex'
 import InfoWizard from './wizards/InfoWizard'
 import DimensionsWizard from './wizards/DimensionsWizard'
 import ImageGalleryWizard from './wizards/ImageGalleryWizard'
+const axios = require('axios')
 
 export default {
   name: 'Header',
@@ -112,9 +113,20 @@ export default {
     'zoom',
     'zoomLevels'
   ]),
-  methods: mapMutations([
-    'setZoom'
-  ]),
+  methods: {
+    ...mapMutations([
+      'setZoom',
+      'setModel'
+    ]),
+    updatePhoto: function (photoName) {
+      let vm = this
+      axios.post(`/update_photo/index/${photoName}`).then(() => {
+        let model = vm.model
+        model.photo = photoName
+        vm.setModel(model)
+      })
+    }
+  },
   mounted () {
     this.zoomKey = this.zoomLevels.indexOf(this.zoom)
   },

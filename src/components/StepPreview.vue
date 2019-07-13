@@ -8,6 +8,7 @@
     <v-sheet color="transparent" width="100%">
       <v-flex d-flex shrink justify-center align-top>
         <img :src="previewUrl"/>
+        <img v-if="model.photo" :height="$store.getters.displayedHeight()" :src="$store.getters.getPhotoUrl(model.photo)"/>
       </v-flex>
     </v-sheet>
   </v-sheet>
@@ -30,6 +31,7 @@ export default {
     }
   },
   computed: mapState([
+    'model',
     'zoom',
     'editingStep',
     'editingStepTweakedOptions'
