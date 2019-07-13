@@ -4,7 +4,7 @@
       <v-card-title>
         <span class="headline">Dimensions de la tranche</span>
       </v-card-title>
-      <v-card-text>
+      <v-card-text v-if="dimensions">
         <v-text-field
             v-model="dimensions.width"
             label="Largeur"
