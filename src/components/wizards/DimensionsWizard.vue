@@ -5,18 +5,18 @@
         <span class="headline">Dimensions de la tranche</span>
       </v-card-title>
       <v-card-text>
-          <v-text-field
-              v-model="dimensions.width"
-              label="Largeur"
-              :rules="dimensionRule"
-              required
-          />
-          <v-text-field
-              v-model="dimensions.height"
-              label="Hauteur"
-              :rules="dimensionRule"
-              required
-          />
+        <v-text-field
+            v-model="dimensions.width"
+            label="Largeur"
+            :rules="dimensionRule"
+            required
+        />
+        <v-text-field
+            v-model="dimensions.height"
+            label="Hauteur"
+            :rules="dimensionRule"
+            required
+        />
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>

@@ -4,20 +4,10 @@
           <EditableStepPreview v-for="step in steps" :key="step.Ordre"
               :stepNumber="step.Ordre"
               :stepFunctionName="step.Nom_fonction"
-              :editing="editingStep === step.Ordre"
-              :shouldLoad="steps[loadingStepPreview] && steps[loadingStepPreview].Ordre === step.Ordre"
-              @step-preview-loaded="loadNextStepPreview"
-              @start-editing="editingStep = step.Ordre"
-              @tweak-options="tweakedStep=editingStep;tweakedStepOptions=$event"
-              @stop-editing="editingStep = null"
           />
       </v-layout>
       <v-layout id="model-preview">
-          <StepPreview
-              :shouldLoad="true"
-              :tweakedStep="tweakedStep"
-              :tweakedStepOptions="tweakedStepOptions"
-          />
+          <StepPreview />
       </v-layout>
   </v-flex>
 </template>
@@ -27,40 +17,26 @@ import EditableStepPreview from './EditableStepPreview'
 import StepPreview from './StepPreview'
 import stepOptionsMixin from '../stepOptionsMixin'
 import { mapMutations, mapState } from 'vuex'
+const axios = require('axios')
 
 export default {
   name: 'ModelEdit',
   mixins: [stepOptionsMixin],
-  data () {
-    return {
-      steps: [],
-      editingStep: null,
-      loadingStepPreview: null,
-      tweakedStep: undefined,
-      tweakedStepOptions: {}
-    }
-  },
   computed: mapState([
-    'zoom',
-    'dimensions'
+    'dimensions',
+    'steps'
   ]),
-  watch: {
-    zoom: function () {
-      this.loadingStepPreview = 0
-    }
-  },
   mounted () {
-    const axios = require('axios')
     let vm = this
     axios.post('/parametrageg_wizard/index')
       .then(({ data }) => {
-        vm.steps = data.filter(step => step.Ordre !== -1) || []
-        vm.loadingStepPreview = 0
+        vm.setSteps(data.filter(step => step.Ordre !== -1) || [])
+        vm.setLoadingStep(vm.steps[0].Ordre)
       })
 
     axios.post('/parametrageg_wizard/index/-1')
       .then(({ data }) => {
-        let dimensions = vm.convertToSimpleOptions(data)
+        const dimensions = vm.convertToSimpleOptions(data)
         vm.setDimensions({
           width: parseInt(dimensions.Dimension_x),
           height: parseInt(dimensions.Dimension_y)
@@ -69,17 +45,12 @@ export default {
   },
   methods: {
     ...mapMutations([
-      'setDimensions'
-    ]),
-    loadNextStepPreview: function () {
-      this.loadingStepPreview++
-      if (this.steps[this.loadingStepPreview] === undefined) {
-        this.loadingStepPreview = -1
-        console.debug('Reached last step')
-      } else {
-        console.debug('New step to preview : ' + this.loadingStepPreview)
-      }
-    }
+      'setDimensions',
+      'setSteps',
+      'setLoadingStep',
+      'loadNextStep',
+      'startEditing'
+    ])
   },
   components: {
     EditableStepPreview,

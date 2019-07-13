@@ -11,6 +11,7 @@
         <li>Cliquez sur une étape pour la modifier.</li>
         <li>Passez la souris entre 2 étapes pour en insérer une nouvelle.</li>
       </ul>
+      <br />
       La zone "Preview" contient :
       <ul style="list-style-type: circle">
         <li>La tranche qui précède le numéro actuel, si elle existe</li>
@@ -36,4 +37,7 @@ export default {
 </script>
 
 <style scoped>
+  .v-card__text {
+    white-space: normal;
+  }
 </style>

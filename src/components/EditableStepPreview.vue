@@ -1,17 +1,17 @@
 <template>
   <v-sheet
       color="grey lighten-3"
-      :class="{preview : true, 'step-preview': true, editing}"
-      @click.stop="!editing && editStep()">
+      :class="{preview : true, 'step-preview': true, editing: isEditingStep()}"
+      @click.stop="!isEditingStep() && editStep()">
     <v-sheet class="header" width="100%" color="rgba(0, 0, 0, .36)">
       <img :src="`/images/fonctions/${stepFunctionName}.png`" />
-      <span v-if="editing" class="title">{{ stepFunctionName }}</span>
+      <span v-if="isEditingStep()" class="title">{{ stepFunctionName }}</span>
     </v-sheet>
     <v-sheet color="transparent" width="100%">
       <v-flex d-flex justify-start align-top>
-        <img v-if="loadPreview" v-show="!editing" :src="previewUrl" @load="$emit('step-preview-loaded')"/>
-        <div v-show="editing" ref="canvas" class="empty-canvas" :style="canvasDimensions"></div>
-        <v-layout v-if="editing" d-flex column align-content-space-between class="step-options-wrapper">
+        <img v-if="isLoaded || isLoadingStep()" v-show="isLoaded && !isEditingStep()" :src="previewUrl" @load="isLoaded = true; loadNextStep()"/>
+        <div v-show="isEditingStep()" ref="canvas" class="empty-canvas" :style="canvasDimensions"></div>
+        <v-layout v-if="isEditingStep()" d-flex column align-content-space-between class="step-options-wrapper">
           <v-sheet>
             <component :is="stepFunctions[stepFunctionName]" :options="stepOptions" @options-changed="updatePreview" />
           </v-sheet>
@@ -26,8 +26,8 @@
     <ConfirmCancelEditWizard
         v-if="cancelEditRequested"
         @close-dialog="cancelEditRequested = false"
-        @save="updatePreview()"
-        @cancel-edit="cancelEditRequested = false; $emit('stop-editing')"/>
+        @save="saveStep()"
+        @cancel-edit="cancelEditRequested = false; stopEditing()"/>
   </v-sheet>
 </template>
 
@@ -37,7 +37,7 @@ import * as stepFunctions from './step-functions'
 import stepOptionsMixin from '../stepOptionsMixin'
 import ConfirmCancelEditWizard from './wizards/ConfirmCancelEditWizard'
 import StepPreview from './StepPreview'
-import { mapGetters } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
 const axios = require('axios')
 
 export default {
@@ -45,12 +45,12 @@ export default {
   extends: StepPreview,
   mixins: [stepOptionsMixin],
   props: {
-    editing: Boolean,
-    shouldLoad: Boolean,
+    stepNumber: Number,
     stepFunctionName: String
   },
   data () {
     return {
+      isLoaded: false,
       stepFunctions: {
         Rectangle: 'RectangleFunction',
         Image: 'ImageFunction',
@@ -58,15 +58,18 @@ export default {
         TexteMyFonts: 'TextFunction'
       },
       cancelEditRequested: false,
-      tweakedOptions: null,
-      availableActions: [{
-        id: 'close', title: 'Fermer', click: this.requestCancelEditing
-      }, {
-        id: 'validate', title: 'Valider', click: this.requestCancelEditing
-      }]
+      availableActions: [
+        { id: 'close', title: 'Fermer', click: this.requestCancelEditing },
+        { id: 'validate', title: 'Valider', click: this.saveStep }
+      ]
     }
   },
   computed: {
+    ...mapState([
+      'loadingStep',
+      'editingStep',
+      'editingStepTweakedOptions'
+    ]),
     ...mapGetters([
       'displayedWidth',
       'displayedHeight'
@@ -78,39 +81,35 @@ export default {
       }
     }
   },
-  watch: {
-    shouldLoad: {
-      immediate: true,
-      handler: function (newVal) {
-        if (newVal) {
-          this.loadPreview = true
-        }
-      }
-    }
-  },
   methods: {
+    ...mapMutations(['startEditing', 'setEditingStepTweakedOptions', 'stopEditing', 'loadNextStep']),
+
+    isLoadingStep: function () { return this.loadingStep === this.stepNumber },
+    isEditingStep: function () { return this.editingStep === this.stepNumber },
     editStep: function () {
       let vm = this
       axios.post(`/parametrageg_wizard/index/${this.stepNumber}`)
         .then(({ data }) => {
           vm.stepOptions = vm.convertToSimpleOptions(data)
-          vm.$emit('start-editing')
+          vm.startEditing(vm.stepNumber)
         })
     },
     requestCancelEditing: function () {
-      if (!this.tweakedOptions || this.tweakedOptions === {} || this.stepOptions === this.tweakedOptions) {
-        this.$emit('stop-editing')
+      if (!this.editingStepTweakedOptions || !Object.keys(this.editingStepTweakedOptions).length || this.stepOptions === this.editingStepTweakedOptions) {
+        this.stopEditing()
       } else {
         this.cancelEditRequested = true
       }
     },
     updatePreview: function (newOptions = {}) {
-      this.tweakedOptions = Object.assign({}, newOptions)
-      this.$emit('tweak-options', this.tweakedOptions)
+      this.setEditingStepTweakedOptions(Object.assign({}, newOptions))
+    },
+    saveStep: function () {
+      let options = this.convertFromSimpleOptions(this.editingStepTweakedOptions || {})
+      axios.post(`/update_wizard/index/${this.stepNumber}/${this.objectToUrlParams(options)}`).then(({ data }) => {
+        // TODO refresh preview
+      })
     }
-  },
-  mounted () {
-    this.loadPreview = this.shouldLoad
   },
   components: {
     ConfirmCancelEditWizard,

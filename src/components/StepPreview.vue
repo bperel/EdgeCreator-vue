@@ -7,7 +7,7 @@
     </v-sheet>
     <v-sheet color="transparent" width="100%">
       <v-flex d-flex shrink justify-center align-top>
-        <img v-if="loadPreview" :src="previewUrl" @load="$emit('step-preview-loaded')"/>
+        <img :src="previewUrl"/>
       </v-flex>
     </v-sheet>
   </v-sheet>
@@ -21,46 +21,36 @@ export default {
   name: 'StepPreview.vue',
   mixins: [stepOptionsMixin],
   props: {
-    shouldLoad: Boolean,
-    stepNumber: {
-      default: 'final'
-    },
-    tweakedStep: Number,
-    tweakedStepOptions: Object
+    stepNumber: { default: 'final' }
   },
   data () {
     return {
-      loadPreview: false,
       stepOptions: {},
       previewUrl: ''
     }
   },
   computed: mapState([
-    'zoom'
+    'zoom',
+    'editingStep',
+    'editingStepTweakedOptions'
   ]),
   watch: {
-    shouldLoad: {
-      immediate: true,
-      handler (newVal) {
-        if (newVal) {
-          this.loadPreview = true
-        }
-      }
-    },
     zoom: {
       immediate: true,
       handler () {
         this.setPreviewUrl()
       }
     },
-    tweakedStepOptions: function () {
-      this.setPreviewUrl()
+    editingStepTweakedOptions: function () {
+      if (this.stepNumber === 'final') {
+        this.setPreviewUrl()
+      }
     }
   },
   methods: {
     setPreviewUrl: function () {
-      let options = this.convertFromSimpleOptions(this.tweakedStepOptions || {})
-      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.stepNumber}/${this.tweakedStep ? this.tweakedStep + '.' : ''}${this.objectToUrlParams(options)}/false/false/false/${Math.random()}`
+      let options = this.convertFromSimpleOptions(this.editingStepTweakedOptions || {})
+      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.stepNumber}/${this.editingStep ? this.editingStep + '.' : ''}${this.objectToUrlParams(options)}/false/false/false/0`
     }
   }
 }
