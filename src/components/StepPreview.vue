@@ -7,8 +7,14 @@
     </v-sheet>
     <v-sheet color="transparent" width="100%">
       <v-flex d-flex shrink justify-center align-top>
-        <img :src="previewUrl"/>
-        <img v-if="model.photo" :height="$store.getters.displayedHeight()" :src="$store.getters.getPhotoUrl(model.photo)"/>
+        <div class="preview-wrapper">
+          <img :src="previewUrl"/>
+          <div class="preview-text">Preview</div>
+        </div>
+        <div v-if="model.photo" class="preview-wrapper">
+          <img :height="$store.getters.displayedHeight()" :src="$store.getters.getPhotoUrl(model.photo)"/>
+          <div class="preview-text">Photo&nbsp;<img src="images/photo.png" /></div>
+        </div>
       </v-flex>
     </v-sheet>
   </v-sheet>
@@ -74,9 +80,22 @@ export default {
     padding: 8px;
   }
 
-  .d-flex > img {
+  .preview-wrapper {
     flex-shrink: 0 !important;
     flex-grow: 0 !important;
     margin: 0 8px;
+    line-height: 14px;
+    text-align: center;
+  }
+
+  .preview-wrapper .preview-text {
+    position: absolute;
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-end;
+    width: 50px;
+    text-align: right;
+    transform: rotate(-90deg);
+    transform-origin: 30px 25px;
   }
 </style>
