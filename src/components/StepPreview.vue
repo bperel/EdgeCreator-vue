@@ -22,7 +22,7 @@
 
 <script>
 import stepOptionsMixin from '../stepOptionsMixin'
-import { mapState } from 'vuex'
+import { mapGetters, mapState } from 'vuex'
 
 export default {
   name: 'StepPreview.vue',
@@ -32,33 +32,28 @@ export default {
   },
   data () {
     return {
-      stepOptions: {},
-      previewUrl: ''
+      stepOptions: {}
     }
   },
-  computed: mapState([
-    'model',
-    'zoom',
-    'editingStep',
-    'editingStepTweakedOptions'
-  ]),
-  watch: {
-    zoom: {
-      immediate: true,
-      handler () {
-        this.setPreviewUrl()
+  computed: {
+    ...mapState([
+      'model',
+      'zoom',
+      'editingStep',
+      'editingStepTweakedOptions'
+    ]),
+    ...mapGetters([
+      'getLastPreviewGenerationTime'
+    ]),
+    previewUrl () {
+      let stepAndOptionsParams
+      if (this.stepNumber === 'final' && Object.keys(this.editingStepTweakedOptions).length) {
+        let options = this.convertFromSimpleOptions(this.editingStepTweakedOptions || {})
+        stepAndOptionsParams = (this.editingStep ? this.editingStep + '.' : '') + this.objectToUrlParams(options)
+      } else {
+        stepAndOptionsParams = '_'
       }
-    },
-    editingStepTweakedOptions: function () {
-      if (this.stepNumber === 'final') {
-        this.setPreviewUrl()
-      }
-    }
-  },
-  methods: {
-    setPreviewUrl: function () {
-      let options = this.convertFromSimpleOptions(this.editingStepTweakedOptions || {})
-      this.previewUrl = `/viewer_wizard/etape/${this.zoom}/${this.stepNumber}/${this.editingStep ? this.editingStep + '.' : ''}${this.objectToUrlParams(options)}/false/false/false/0`
+      return `/viewer_wizard/etape/${this.zoom}/${this.stepNumber}/${stepAndOptionsParams}/false/false/false/${this.getLastPreviewGenerationTime(this.stepNumber)}`
     }
   }
 }

@@ -82,7 +82,13 @@ export default {
     }
   },
   methods: {
-    ...mapMutations(['startEditing', 'setEditingStepTweakedOptions', 'stopEditing', 'loadNextStep']),
+    ...mapMutations([
+      'startEditing',
+      'setEditingStepTweakedOptions',
+      'updateLastPreviewGenerationTime',
+      'stopEditing',
+      'loadNextStep'
+    ]),
 
     isLoadingStep: function () { return this.loadingStep === this.stepNumber },
     isEditingStep: function () { return this.editingStep === this.stepNumber },
@@ -105,9 +111,12 @@ export default {
       this.setEditingStepTweakedOptions(Object.assign({}, newOptions))
     },
     saveStep: function () {
+      let vm = this
       let options = this.convertFromSimpleOptions(this.editingStepTweakedOptions || {})
       axios.post(`/update_wizard/index/${this.stepNumber}/${this.objectToUrlParams(options)}`).then(({ data }) => {
-        // TODO refresh preview
+        vm.updateLastPreviewGenerationTime(vm.stepNumber)
+        vm.updateLastPreviewGenerationTime('final')
+        vm.stopEditing()
       })
     }
   },
