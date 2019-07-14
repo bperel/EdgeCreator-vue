@@ -37,7 +37,7 @@
       <div class="text-xs-center">
         <v-tooltip bottom v-for="menuItem in menuItems" :key="menuItem.icon" data-app>
           <template v-slot:activator="{ on }">
-            <img v-on="on" class="action tip" :src="menuItem.icon" @click="menuItem.click"/>
+            <img v-on="on" class="action tip" :class="{'disabled': !!menuItem.disabled}" :src="menuItem.icon" @click="menuItem.click"/>
           </template>
           <span>{{ menuItem.title }}</span>
         </v-tooltip>
@@ -92,17 +92,20 @@ export default {
         {
           icon: 'images/clone.png',
           title: 'Cloner depuis un autre modèle de tranche',
-          click: () => {}
+          click: () => {},
+          disabled: true
         },
         {
           icon: 'images/corbeille.png',
           title: 'Supprimer cette conception de tranche',
-          click: () => {}
+          click: () => {},
+          disabled: true
         },
         {
           icon: 'images/valider.png',
           title: 'Valider cette conception de tranche',
-          click: () => {}
+          click: () => {},
+          disabled: true
         }
       ]
     }
@@ -164,5 +167,10 @@ export default {
     height: 20px;
     margin-left: 10px;
     cursor: pointer;
+  }
+
+  .action.disabled {
+    cursor: default;
+    background-color: #ccc;
   }
 </style>
