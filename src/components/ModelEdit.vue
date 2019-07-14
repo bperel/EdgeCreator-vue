@@ -23,25 +23,31 @@ export default {
   name: 'ModelEdit',
   mixins: [stepOptionsMixin],
   computed: mapState([
+    'model',
     'dimensions',
     'steps'
   ]),
-  mounted () {
-    let vm = this
-    axios.post('/parametrageg_wizard/index')
-      .then(({ data }) => {
-        vm.setSteps(data.filter(step => step.Ordre !== -1) || [])
-        vm.setLoadingStep(vm.steps[0].Ordre)
-      })
+  watch: {
+    model: {
+      immediate: true,
+      handler (to) {
+        let vm = this
+        axios.post('/parametrageg_wizard/index')
+          .then(({ data }) => {
+            vm.setSteps(data.filter(step => step.Ordre !== -1) || [])
+            vm.setLoadingStep(vm.steps[0].Ordre)
+          })
 
-    axios.post('/parametrageg_wizard/index/-1')
-      .then(({ data }) => {
-        const dimensions = vm.convertToSimpleOptions(data)
-        vm.setDimensions({
-          width: parseInt(dimensions.Dimension_x),
-          height: parseInt(dimensions.Dimension_y)
-        })
-      })
+        axios.post('/parametrageg_wizard/index/-1')
+          .then(({ data }) => {
+            const dimensions = vm.convertToSimpleOptions(data)
+            vm.setDimensions({
+              width: parseInt(dimensions.Dimension_x),
+              height: parseInt(dimensions.Dimension_y)
+            })
+          })
+      }
+    }
   },
   methods: {
     ...mapMutations([
