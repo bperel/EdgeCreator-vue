@@ -7,11 +7,19 @@
     </v-sheet>
     <v-sheet color="transparent" width="100%">
       <v-flex d-flex shrink justify-center align-top>
+        <div v-if="previousEdgeUrl" class="preview-wrapper">
+          <img :height="$store.getters.displayedHeight()" :src="previousEdgeUrl"/>
+          <div class="preview-text">Previous edge</div>
+        </div>
         <div class="preview-wrapper">
           <img :src="previewUrl"/>
           <div class="preview-text">Preview</div>
         </div>
-        <div v-if="model.photo" class="preview-wrapper">
+        <div v-if="nextEdgeUrl" class="preview-wrapper">
+          <img :height="$store.getters.displayedHeight()" :src="nextEdgeUrl"/>
+          <div class="preview-text">Next edge</div>
+        </div>
+        <div v-if="model.photo" class="preview-wrapper" :style="{'margin-left': '8px'}">
           <img :height="$store.getters.displayedHeight()" :src="$store.getters.getPhotoUrl(model.photo)"/>
           <div class="preview-text">Photo&nbsp;<img src="images/photo.png" /></div>
         </div>
@@ -23,6 +31,7 @@
 <script>
 import stepOptionsMixin from '../stepOptionsMixin'
 import { mapGetters, mapState } from 'vuex'
+const axios = require('axios')
 
 export default {
   name: 'StepPreview.vue',
@@ -32,7 +41,9 @@ export default {
   },
   data () {
     return {
-      stepOptions: {}
+      stepOptions: {},
+      previousEdgeUrl: null,
+      nextEdgeUrl: null
     }
   },
   computed: {
@@ -43,7 +54,8 @@ export default {
       'editingStepTweakedOptions'
     ]),
     ...mapGetters([
-      'getLastPreviewGenerationTime'
+      'getStepPreviewUrl',
+      'getEdgeUrl'
     ]),
     previewUrl () {
       let stepAndOptionsParams
@@ -53,7 +65,30 @@ export default {
       } else {
         stepAndOptionsParams = '_'
       }
-      return `/viewer_wizard/etape/${this.zoom}/${this.stepNumber}/${stepAndOptionsParams}/false/false/false/${this.getLastPreviewGenerationTime(this.stepNumber)}`
+      return this.getStepPreviewUrl(this.stepNumber, stepAndOptionsParams)
+    }
+  },
+  mounted () {
+    if (this.stepNumber === 'final') {
+      let vm = this
+      axios.post(`/numerosdispos/index/${this.model.countryCode}/${this.model.publicationCodeShort}`)
+        .then(({ data }) => {
+          let {
+            tranches_pretes: publishedEdges,
+            numeros_dispos: indexedIssues
+          } = data
+          let indexedIssuesKeys = Object.keys(indexedIssues)
+          let indexedIssuesKeyCurrentModel = parseInt(indexedIssuesKeys.find(key => indexedIssues[key] === vm.model.issueNumber))
+
+          let previousIssueNumber = indexedIssues[indexedIssuesKeyCurrentModel - 1]
+          let previousModel = previousIssueNumber && publishedEdges[ previousIssueNumber ]
+
+          let nextIssueNumber = indexedIssues[indexedIssuesKeyCurrentModel + 1]
+          let nextModel = nextIssueNumber && publishedEdges[ nextIssueNumber ]
+
+          this.previousEdgeUrl = previousModel ? this.getEdgeUrl(previousIssueNumber, previousModel !== 'en_cours') : null
+          this.nextEdgeUrl = nextModel ? this.getEdgeUrl(nextIssueNumber, nextModel !== 'en_cours') : null
+        })
     }
   }
 }
@@ -78,7 +113,6 @@ export default {
   .preview-wrapper {
     flex-shrink: 0 !important;
     flex-grow: 0 !important;
-    margin: 0 8px;
     line-height: 14px;
     text-align: center;
   }

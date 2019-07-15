@@ -62,6 +62,12 @@ export default {
     getPhotoUrl: (state) => fileName =>
       `${state.edgesRoot}/${state.model.countryCode}/photos/${fileName}`,
 
+    getStepPreviewUrl: (state) => (stepNumber, stepAndOptionsParams) =>
+      `/viewer_wizard/etape/${state.zoom}/${stepNumber}/${stepAndOptionsParams}/false/false/false/${state.lastGenerationTimePerStep[stepNumber]}`,
+
+    getEdgeUrl: (state) => (issueNumber, isPublished) =>
+      `/viewer_wizard/index/0/${state.model.countryCode}/${state.model.publicationCodeShort}/${issueNumber}/${state.zoom}/all/{}/false/false/${isPublished}`,
+
     addZoom: (state) => value =>
       parseFloat(value) * state.zoom,
 
@@ -75,10 +81,6 @@ export default {
       getters.addZoom(state.dimensions.height),
 
     userIsEditor: (state) => () =>
-      ['Edition', 'Admin'].includes(state.user.privilege),
-
-    getLastPreviewGenerationTime: (state) => stepNumber => {
-      return state.lastGenerationTimePerStep[stepNumber]
-    }
+      ['Edition', 'Admin'].includes(state.user.privilege)
   }
 }
