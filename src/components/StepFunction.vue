@@ -1,7 +1,7 @@
 <template>
   <div>
     <slot name="canvas-override"/>
-    <v-alert outline color="blue" type="info" value="1" style="background: white">
+    <v-alert outlined color="blue" type="info" style="background: white">
       <slot name="instructions" />
     </v-alert>
     <slot />

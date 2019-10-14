@@ -1,9 +1,9 @@
 <template>
-  <v-flex>
+  <div class="d-flex">
     <label>{{ label }} :
       <input :value="color" @input="emitColorChangeEvent" type="color" />
     </label>
-  </v-flex>
+  </div>
 </template>
 
 <script>

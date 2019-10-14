@@ -9,18 +9,18 @@
           Entrez vos identifiants DucksManager habituels ci-dessous et cliquez sur "Connexion".
           <v-container grid-list-md>
             <v-layout wrap>
-              <v-flex xs12>
+              <div class="d-flex xs12">
                 <v-text-field v-model="user.username" label="Pseudo" required></v-text-field>
-              </v-flex>
-              <v-flex xs12>
+              </div>
+              <div class="d-flex xs12">
                 <v-text-field v-model="user.password" label="Mot de passe" type="password" required></v-text-field>
-              </v-flex>
+              </div>
             </v-layout>
           </v-container>
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn type="submit" color="blue darken-1" flat>Connexion</v-btn>
+          <v-btn type="submit" color="blue darken-1" text>Connexion</v-btn>
         </v-card-actions>
       </form>
     </v-card>

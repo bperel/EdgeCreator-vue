@@ -1,13 +1,13 @@
 <template>
-  <div id="app">
+  <v-app id="app">
     <CheckLoggedIn @retrieve-session-user="setUser" @prompt-login="setUser(null)"/>
     <Header v-if="user" @logout="logout" />
     <LoginWizard v-if="user === null" />
-    <v-dialog data-app v-model="showMenuDialog" persistent max-width="500px">
+    <v-dialog v-model="showMenuDialog" persistent max-width="500">
       <MenuWizard @load-model="startModelEdit"/>
     </v-dialog>
     <ModelEdit v-if="user && user.username && model" />
-  </div>
+  </v-app>
 </template>
 
 <script>
@@ -25,10 +25,7 @@ export default {
     ...mapState([
       'user',
       'model'
-    ]),
-    showMenuDialog () {
-      return this.user && this.user.username && !this.$route.params.modelId
-    }
+    ])
   },
   watch: {
     $route: {
@@ -40,6 +37,17 @@ export default {
           this.setModel(null)
         }
       }
+    },
+    model: {
+      immediate: true,
+      handler: function (newModelValue) {
+        this.showMenuDialog = !newModelValue
+      }
+    }
+  },
+  data () {
+    return {
+      showMenuDialog: false
     }
   },
   methods: {

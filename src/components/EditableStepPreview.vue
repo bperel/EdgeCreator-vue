@@ -8,20 +8,20 @@
       <span v-if="isEditingStep()" class="title">{{ stepFunctionName }}</span>
     </v-sheet>
     <v-sheet color="transparent" width="100%">
-      <v-flex d-flex justify-start align-top>
+      <v-layout class="d-flex justify-start align-top">
         <img v-if="isLoaded || isLoadingStep()" v-show="isLoaded && !isEditingStep()" :src="previewUrl" @load="isLoaded = true; loadNextStep()"/>
         <div v-show="isEditingStep()" ref="canvas" class="empty-canvas" :style="canvasDimensions"></div>
-        <v-layout v-if="isEditingStep()" d-flex column align-content-space-between class="step-options-wrapper">
+        <v-card v-if="isEditingStep()"  class="step-options-wrapper d-flex column justify-space-between">
           <v-sheet>
             <component :is="stepFunctions[stepFunctionName]" :options="stepOptions" @options-changed="updatePreview" />
           </v-sheet>
-          <v-layout justify-end style="flex-grow: 0 !important;">
-            <v-btn v-for="action in availableActions" @click.stop="action.click" :key="action.id" left>
+          <v-footer absolute class="d-flex justify-space-between">
+            <v-btn v-for="action in availableActions" @click.stop="action.click" :key="action.id">
               {{ action.title }}
             </v-btn>
-          </v-layout>
-        </v-layout>
-      </v-flex>
+          </v-footer>
+        </v-card>
+      </v-layout>
     </v-sheet>
     <ConfirmCancelEditWizard
         v-if="cancelEditRequested"
@@ -138,6 +138,7 @@ export default {
 
   .step-options-wrapper {
     margin: 16px 16px 16px 8px ;
+    padding-bottom: 48px;
   }
 
   .step-options-wrapper > div {

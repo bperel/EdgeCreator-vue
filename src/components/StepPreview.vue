@@ -6,7 +6,7 @@
       <span class="subheading">Preview</span>
     </v-sheet>
     <v-sheet color="transparent" width="100%">
-      <v-flex d-flex shrink justify-center align-top>
+      <v-layout class="d-flex shrink justify-center align-top">
         <div v-if="previousEdgeUrl" class="preview-wrapper">
           <img :height="$store.getters.displayedHeight()" :src="previousEdgeUrl"/>
           <div class="preview-text">Previous edge</div>
@@ -23,7 +23,7 @@
           <img :height="$store.getters.displayedHeight()" :src="$store.getters.getPhotoUrl(model.photo)"/>
           <div class="preview-text">Photo&nbsp;<img src="images/photo.png" /></div>
         </div>
-      </v-flex>
+      </v-layout>
     </v-sheet>
   </v-sheet>
 </template>

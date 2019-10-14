@@ -45,7 +45,7 @@
     </v-card-text>
     <v-card-actions>
       <v-spacer></v-spacer>
-      <v-btn @click="startModelEdit()" color="blue darken-1" flat>Suivant</v-btn>
+      <v-btn @click="startModelEdit()" color="blue darken-1" text>Suivant</v-btn>
     </v-card-actions>
   </v-card>
 </template>

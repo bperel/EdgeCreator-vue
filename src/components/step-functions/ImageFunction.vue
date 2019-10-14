@@ -22,14 +22,16 @@
       </ul>
     </template>
 
-    <v-flex d-flex>
+    <div class="d-flex">
       <v-text-field
           v-model="tweakedStepOptions.Source"
           label="Image utilisée"
           required
       />
       <v-dialog v-model="showImageGalleryDialog" max-width="500px">
-        <v-btn slot="activator">Modifier l'image</v-btn>
+        <template v-slot:activator="{ on }">
+          <v-btn v-on="on">Modifier l'image</v-btn>
+        </template>
         <ImageGalleryWizard
             v-if="showImageGalleryDialog"
             :type="'Source'"
@@ -37,7 +39,7 @@
             @select-image="updatePreview({source: $event}); showImageGalleryDialog = false"
         />
       </v-dialog>
-    </v-flex>
+    </div>
   </StepFunction>
 </template>
 

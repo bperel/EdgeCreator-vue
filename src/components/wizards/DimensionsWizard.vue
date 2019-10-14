@@ -20,7 +20,7 @@
       </v-card-text>
       <v-card-actions>
         <v-spacer></v-spacer>
-        <v-btn :disabled="!valid" @click="setDimensions(dimensions) ; $emit('close-dialog')" color="blue darken-1" flat>OK</v-btn>
+        <v-btn :disabled="!valid" @click="setDimensions(dimensions) ; $emit('close-dialog')" color="blue darken-1" text>OK</v-btn>
       </v-card-actions>
     </v-form>
   </v-card>

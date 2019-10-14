@@ -11,9 +11,9 @@
         </v-card-text>
         <v-card-actions>
           <v-spacer></v-spacer>
-          <v-btn @click="$emit('save') && $emit('close-dialog')" color="blue darken-1" flat>Sauvegarder les changements</v-btn>
-          <v-btn @click="$emit('cancel-edit')" color="blue darken-1" flat>Fermer l'étape sans sauvegarder</v-btn>
-          <v-btn @click="$emit('close-dialog')" color="blue darken-1" flat>Revenir à l'édition d'étape</v-btn>
+          <v-btn @click="$emit('save') && $emit('close-dialog')" color="blue darken-1" text>Sauvegarder les changements</v-btn>
+          <v-btn @click="$emit('cancel-edit')" color="blue darken-1" text>Fermer l'étape sans sauvegarder</v-btn>
+          <v-btn @click="$emit('close-dialog')" color="blue darken-1" text>Revenir à l'édition d'étape</v-btn>
         </v-card-actions>
       </form>
     </v-card>

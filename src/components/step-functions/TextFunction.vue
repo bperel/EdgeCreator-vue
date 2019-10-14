@@ -23,7 +23,7 @@
       </ul>
     </template>
 
-    <v-flex d-block>
+    <div class="d-flex d-block flex-column">
       <v-text-field
           v-model.lazy="tweakedStepOptions.URL"
           @change="tweakedStepOptions.URL = tweakedStepOptions.URL.replace(/\//g, '.'); updatePreview()"
@@ -46,7 +46,7 @@
           fieldName="backgroundColor"
           label="Couleur du fond"
           @update-color="updatePreview"/>
-    </v-flex>
+    </div>
   </StepFunction>
 </template>
 

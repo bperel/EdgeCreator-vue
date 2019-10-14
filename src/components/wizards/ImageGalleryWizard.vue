@@ -3,27 +3,25 @@
     <v-card-title>
       <span class="headline">Gallerie d'images</span>
     </v-card-title>
-    <v-expansion-panel>
-      <v-expansion-panel-content>
+    <v-expansion-panels>
+      <v-expansion-panel>
         <template v-slot:header>
           <v-btn @click="showUploadForm = !showUploadForm">Uploader une image</v-btn>
         </template>
         <div v-show="showUploadForm" id="select-files"></div>
-      </v-expansion-panel-content>
-    </v-expansion-panel>
+      </v-expansion-panel>
+    </v-expansion-panels>
     <v-card-text>
       <v-layout>
-        <v-flex xs12>
+        <div class="d-flex xs12">
           <v-card>
             <v-container grid-list-sm fluid>
               <v-layout row wrap>
-                <v-flex
+                <div
                     @click="$emit('select-image', item)"
-                    class="thumbnail"
+                    class="thumbnail d-flex xs4"
                     v-for="(item, itemIndex) in items"
                     :key="itemIndex"
-                    xs4
-                    d-flex
                 >
                   <v-card flat tile class="d-flex">
                     <v-img
@@ -48,11 +46,11 @@
                     </v-img>
                   </v-card>
                   <div class="image-name">{{ item }}</div>
-                </v-flex>
+                </div>
               </v-layout>
             </v-container>
           </v-card>
-        </v-flex>
+        </div>
       </v-layout>
     </v-card-text>
   </v-card>

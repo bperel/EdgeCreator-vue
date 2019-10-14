@@ -1,5 +1,5 @@
 <template>
-  <v-flex v-if="dimensions && steps.length" justify-space-between id="current-steps-and-preview">
+  <div v-if="dimensions && steps.length" class="d-flex justify-space-between" id="current-steps-and-preview">
       <v-layout id="current-steps">
           <EditableStepPreview v-for="step in steps" :key="step.Ordre"
               :stepNumber="step.Ordre"
@@ -9,7 +9,7 @@
       <v-layout id="model-preview">
           <StepPreview />
       </v-layout>
-  </v-flex>
+  </div>
 </template>
 
 <script>

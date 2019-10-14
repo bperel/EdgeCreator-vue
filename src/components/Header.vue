@@ -1,5 +1,5 @@
 <template>
-  <v-flex justify-space-between align-center id="header">
+  <div class="d-flex justify-space-between align-center" id="header">
     <v-dialog v-model="showInfoDialog" max-width="500px">
       <InfoWizard @close-dialog="showInfoDialog=false"/>
     </v-dialog>
@@ -15,7 +15,7 @@
     </v-dialog>
 
     <div :class="{invisible: !model || zoomKey === null}">
-      <v-flex align-center class="zoom-wrapper">
+      <div class="d-flex align-center zoom-wrapper">
         <v-label>Zoom :</v-label>
         <v-slider
             data-app
@@ -27,14 +27,14 @@
             tick-size="6"
             color="grey"
         ></v-slider>
-      </v-flex>
+      </div>
     </div>
-    <v-flex v-if="model" column justify-center align-center>
-      <div class="subheading text-xs-center">
+    <div v-if="model" class="flex-column justify-center align-center">
+      <div class="subheading d-flex justify-center align-center">
         <img :src="`images/flags/${model.countryCode}.png`" />&nbsp;
         {{ model.publicationTitle}} n°{{ model.issueNumber }}
       </div>
-      <div class="text-xs-center">
+      <div class="d-flex justify-space-between">
         <v-tooltip bottom v-for="menuItem in menuItems" :key="menuItem.icon" data-app>
           <template v-slot:activator="{ on }">
             <img v-on="on" class="action tip" :class="{'disabled': !!menuItem.disabled}" :src="menuItem.icon" @click="menuItem.click"/>
@@ -42,7 +42,7 @@
           <span>{{ menuItem.title }}</span>
         </v-tooltip>
       </div>
-    </v-flex>
+    </div>
     <div id="status_user">
       <v-layout column v-if="user.username">
         <div>Connecté(e) en tant que <span id="utilisateur">{{user.username}}</span></div>
@@ -50,7 +50,7 @@
       </v-layout>
       <div v-else>Non connecté(e)</div>
     </div>
-  </v-flex>
+  </div>
 </template>
 
 <script>
@@ -150,6 +150,11 @@ export default {
     border-bottom: 1px solid gray;
     z-index: 101;
     background-color: white;
+  }
+
+  .subheading {
+    margin: 10px;
+    height: 10px;
   }
 
   .zoom-wrapper {
