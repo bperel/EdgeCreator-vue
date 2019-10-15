@@ -2,7 +2,7 @@
   <div class="workspace" :style="offset">
     <drr
         :rotatable="rotatable"
-        :scalable="scalable"
+        :resizable="resizable"
         :selected="true"
         :w="shape.width"
         :h="shape.height"
@@ -31,7 +31,7 @@ export default {
     height: Number,
     angle: { default: 0 },
     rotatable: { default: false },
-    scalable: { default: false }
+    resizable: { default: false }
   },
   data () {
     return {

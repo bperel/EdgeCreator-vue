@@ -2,7 +2,7 @@
   <StepFunction>
     <template #canvas-override>
       <Draggable
-          :scalable="true"
+          :resizable="true"
           :rotatable="true"
           :x="shownX"
           :y="shownY"

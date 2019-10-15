@@ -2,7 +2,7 @@
   <StepFunction>
     <template #canvas-override>
       <Draggable
-          :scalable="true"
+          :resizable="true"
           :rotatable="false"
           :x="addZoom(tweakedStepOptions.Pos_x_debut)"
           :y="addZoom(tweakedStepOptions.Pos_y_debut)"

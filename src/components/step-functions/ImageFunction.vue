@@ -2,7 +2,7 @@
   <StepFunction>
     <template #canvas-override>
       <Draggable
-          :scalable="true"
+          :resizable="true"
           :rotatable="false"
           :x="shownX"
           :y="shownY"
@@ -111,6 +111,16 @@ export default {
 </script>
 
 <style>
+  .workspace {
+    position: absolute;
+    margin-left: -91px;
+    margin-top: 7px;
+  }
+
+  .workspace .drr.active {
+    cursor: move;
+  }
+
   label {
     display: flex;
     align-items: center;
