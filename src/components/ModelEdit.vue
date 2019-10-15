@@ -1,36 +1,93 @@
 <template>
-  <div v-if="dimensions && steps.length" class="d-flex justify-space-between" id="current-steps-and-preview">
-      <v-layout id="current-steps">
-          <EditableStepPreview v-for="step in steps" :key="step.Ordre"
-              :stepNumber="step.Ordre"
-              :stepFunctionName="step.Nom_fonction"
-          />
-      </v-layout>
-      <v-layout id="model-preview">
-          <StepPreview />
-      </v-layout>
+  <div v-if="dimensions && steps.length" class="d-flex justify-center" id="current-steps-and-preview">
+    <v-layout id="editor" class="d-flex justify-center">
+      <div id="layers" :style="canvasDimensions">
+        <img v-for="step in steps" :key="step.Ordre"
+             class="layer"
+             v-show="isLoaded && !isEditingStep(step.Ordre)"
+             :src="previewUrl(step.Ordre)"
+             @load="isLoaded = true; loadNextStep()"/>
+      </div>
+      <v-card class="step-options-wrapper d-flex column justify-space-between">
+        <v-sheet>
+          <v-tabs vertical right @change="editStep">
+            <v-tab v-for="step in steps" :key="step.Ordre" class="d-flex center">
+              <img class="function-icon" :src="`/images/fonctions/${step.Nom_fonction}.png`"
+                   :title="step.Nom_fonction"/>
+            </v-tab>
+            <v-tab-item v-for="step in steps" :key="step.Ordre" style="width: 500px">
+              <component v-if="!!editingStepOptions" :is="stepFunctions[step.Nom_fonction]" :options="editingStepOptions"
+                         @options-changed="updatePreview"/>
+            </v-tab-item>
+          </v-tabs>
+        </v-sheet>
+        <v-footer absolute class="d-flex justify-space-between">
+          <v-btn v-for="action in availableActions" @click.stop="action.click" :key="action.id">
+            {{ action.title }}
+          </v-btn>
+        </v-footer>
+      </v-card>
+    </v-layout>
+    <v-layout id="model-preview">
+      <StepPreview/>
+    </v-layout>
   </div>
 </template>
 
 <script>
-import EditableStepPreview from './EditableStepPreview'
+import * as stepFunctions from './step-functions'
 import StepPreview from './StepPreview'
 import stepOptionsMixin from '../stepOptionsMixin'
-import { mapMutations, mapState } from 'vuex'
+import { mapGetters, mapMutations, mapState } from 'vuex'
+
 const axios = require('axios')
 
 export default {
   name: 'ModelEdit',
   mixins: [stepOptionsMixin],
-  computed: mapState([
-    'model',
-    'dimensions',
-    'steps'
-  ]),
+  data () {
+    return {
+      isLoaded: false,
+      editingStepOptions: null,
+      stepFunctions: {
+        Rectangle: 'RectangleFunction',
+        Image: 'ImageFunction',
+        Remplir: 'FillFunction',
+        TexteMyFonts: 'TextFunction'
+      },
+      availableActions: [
+        { id: 'close', title: 'Fermer', click: this.requestCancelEditing },
+        { id: 'validate', title: 'Valider', click: this.saveStep }
+      ]
+    }
+  },
+  computed: {
+    ...mapState([
+      'model',
+      'dimensions',
+      'steps',
+      'loadingStep',
+      'editingStep'
+    ]),
+    ...mapGetters([
+      'getStepPreviewUrl',
+      'displayedWidth',
+      'displayedHeight'
+    ]),
+    canvasDimensions () {
+      return {
+        width: `${this.displayedWidth()}px`,
+        height: `${this.displayedHeight()}px`
+      }
+    },
+    stepsExceptEditingStep () {
+      return this.steps.filter(step => step.Ordre !== this.editingStep)
+    }
+  },
   watch: {
     model: {
       immediate: true,
-      handler (to) {
+      handler () {
         let vm = this
         axios.post('/parametrageg_wizard/index')
           .then(({ data }) => {
@@ -55,26 +112,77 @@ export default {
       'setSteps',
       'setLoadingStep',
       'loadNextStep',
-      'startEditing'
-    ])
+      'startEditing',
+      'stopEditing',
+      'setEditingStepTweakedOptions',
+      'updateLastPreviewGenerationTime'
+    ]),
+
+    previewUrl: function (stepNumber) {
+      return this.getStepPreviewUrl(stepNumber, '_')
+    },
+
+    isLoadingStep: function (stepNumber) {
+      return this.loadingStep === stepNumber
+    },
+
+    isEditingStep: function (stepNumber) {
+      return this.editingStep === stepNumber
+    },
+
+    editStep: function (stepIndex) {
+      this.editingStepOptions = null
+      this.stepNumber = this.steps[stepIndex].Ordre
+      let vm = this
+      axios.post(`/parametrageg_wizard/index/${this.stepNumber}`)
+        .then(({ data }) => {
+          vm.editingStepOptions = vm.convertToSimpleOptions(data)
+          vm.startEditing(vm.stepNumber)
+        })
+    },
+
+    updatePreview: function (newOptions = {}) {
+      this.setEditingStepTweakedOptions(Object.assign({}, newOptions))
+    },
+
+    saveStep: function () {
+      let vm = this
+      let options = this.convertFromSimpleOptions(this.editingStepTweakedOptions || {})
+      axios.post(`/update_wizard/index/${this.editingStep}/${this.objectToUrlParams(options)}`).then(({ data }) => {
+        vm.updateLastPreviewGenerationTime(vm.editingStep)
+        vm.updateLastPreviewGenerationTime('final')
+        vm.stopEditing()
+      })
+    }
   },
   components: {
-    EditableStepPreview,
-    StepPreview
+    StepPreview,
+    ...stepFunctions
   }
 }
 </script>
 
-<style scoped>
+<style>
+  .function-icon {
+    width: 32px;
+    height: 32px;
+    border-radius: 10px;
+    background: white;
+    padding: 8px;
+  }
+
   #current-steps-and-preview {
     padding-top: 80px;
     width: 100%;
     box-sizing: border-box;
   }
 
-  #current-steps {
-    overflow-x: auto;
-    padding: 0 20px;
+  .v-tab--active {
+    background: #1976d2;
+  }
+
+  #editor #layers img {
+    position: absolute;
   }
 
   .preview {
@@ -91,11 +199,6 @@ export default {
     height: 40px;
   }
 
-  .preview .header img {
-    width: 18px;
-    height: 18px;
-  }
-
   .step-preview {
     position: static;
     vertical-align: top;
@@ -103,8 +206,17 @@ export default {
     white-space: normal;
   }
 
-  .step-preview:not(.editing) {
-    cursor: pointer;
+  .step-options-wrapper {
+    margin: 0 16px 0 8px;
+    padding-bottom: 48px;
+  }
+
+  .step-options-wrapper > div {
+    padding: 8px;
+  }
+
+  .layer {
+    opacity: 0.2;
   }
 
   #model-preview {

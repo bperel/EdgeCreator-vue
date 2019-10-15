@@ -8,10 +8,10 @@
       <span v-if="isEditingStep()" class="title">{{ stepFunctionName }}</span>
     </v-sheet>
     <v-sheet color="transparent" width="100%">
-      <v-layout class="d-flex justify-start align-top">
+      <v-layout class="contents d-flex justify-start align-top">
         <img v-if="isLoaded || isLoadingStep()" v-show="isLoaded && !isEditingStep()" :src="previewUrl" @load="isLoaded = true; loadNextStep()"/>
         <div v-show="isEditingStep()" ref="canvas" class="empty-canvas" :style="canvasDimensions"></div>
-        <v-card v-if="isEditingStep()"  class="step-options-wrapper d-flex column justify-space-between">
+        <v-card v-if="isEditingStep()" class="step-options-wrapper d-flex column justify-space-between">
           <v-sheet>
             <component :is="stepFunctions[stepFunctionName]" :options="stepOptions" @options-changed="updatePreview" />
           </v-sheet>

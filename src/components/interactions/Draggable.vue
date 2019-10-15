@@ -79,7 +79,4 @@ export default {
 </script>
 
 <style>
-  .workspace {
-    position: absolute;
-  }
 </style>
