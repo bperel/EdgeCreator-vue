@@ -8,7 +8,7 @@
           :y="shownY"
           :width="shownWidth"
           :height="shownHeight"
-          :angle="-1 * tweakedStepOptions.Rotation"
+          :angle="-1 * editingStepTweakedOptions.Rotation"
           @update-position="updatePreview">
         <img ref="image"
              v-show="loaded"
@@ -25,24 +25,24 @@
 
     <div class="d-flex d-block flex-column">
       <v-text-field
-          v-model.lazy="tweakedStepOptions.URL"
-          @change="tweakedStepOptions.URL = tweakedStepOptions.URL.replace(/\//g, '.'); updatePreview()"
+          v-model.lazy="editingStepTweakedOptions.URL"
+          @change="editingStepTweakedOptions.URL = editingStepTweakedOptions.URL.replace(/\//g, '.'); updatePreview()"
           label="Police de caractères"
           required
       />
       <v-text-field
-          v-model.lazy="tweakedStepOptions.Chaine"
+          v-model.lazy="editingStepTweakedOptions.Chaine"
           @change="updatePreview()"
           label="Texte"
           required
       />
       <ColorPicker
-          :color="tweakedStepOptions.Couleur_texte"
+          :color="editingStepTweakedOptions.Couleur_texte"
           fieldName="textColor"
           label="Couleur du texte"
           @update-color="updatePreview"/>
       <ColorPicker
-          :color="tweakedStepOptions.Couleur_fond"
+          :color="editingStepTweakedOptions.Couleur_fond"
           fieldName="backgroundColor"
           label="Couleur du fond"
           @update-color="updatePreview"/>
@@ -71,20 +71,20 @@ export default {
       'displayedHeight'
     ]),
     textPreviewUrl () {
-      const options = this.convertFromSimpleOptions(this.tweakedStepOptions || {})
+      const options = this.convertFromSimpleOptions(this.editingStepTweakedOptions || {})
       return `/viewer_myfonts/index/${options.URL}/${options.Couleur_texte}/${options.Couleur_fond}/${options.Largeur}/${options.Chaine}/${options.Demi_hauteur}/0/${this.dimensions.x}`
     },
     shownX () {
-      return this.addZoom(this.tweakedStepOptions.Pos_x)
+      return this.addZoom(this.editingStepTweakedOptions.Pos_x)
     },
     shownY () {
-      return this.addZoom(this.tweakedStepOptions.Pos_y)
+      return this.addZoom(this.editingStepTweakedOptions.Pos_y)
     },
     shownWidth () {
-      return this.displayedWidth() * parseFloat(this.tweakedStepOptions.Compression_x)
+      return this.displayedWidth() * parseFloat(this.editingStepTweakedOptions.Compression_x)
     },
     shownHeight () {
-      return this.displayedWidth() * parseFloat(this.tweakedStepOptions.Compression_y) / this.imageSourceRatio
+      return this.displayedWidth() * parseFloat(this.editingStepTweakedOptions.Compression_y) / this.imageSourceRatio
     }
   },
   data: () => {
@@ -99,28 +99,28 @@ export default {
     },
     updatePreview (newValues = {}) {
       if (newValues.x !== undefined) {
-        this.tweakedStepOptions.Pos_x = this.removeZoom(newValues.x)
+        this.editingStepTweakedOptions.Pos_x = this.removeZoom(newValues.x)
       }
       if (newValues.w !== undefined) {
-        this.tweakedStepOptions.Compression_x = newValues.w / this.displayedWidth()
+        this.editingStepTweakedOptions.Compression_x = newValues.w / this.displayedWidth()
       }
       if (newValues.y !== undefined) {
-        this.tweakedStepOptions.Pos_y = this.removeZoom(newValues.y)
+        this.editingStepTweakedOptions.Pos_y = this.removeZoom(newValues.y)
       }
       if (newValues.h !== undefined) {
-        this.tweakedStepOptions.Compression_y = this.tweakedStepOptions.Compression_x * (this.imageSourceRatio / (newValues.w / newValues.h))
+        this.editingStepTweakedOptions.Compression_y = this.editingStepTweakedOptions.Compression_x * (this.imageSourceRatio / (newValues.w / newValues.h))
       }
       if (newValues.angle !== undefined) {
-        this.tweakedStepOptions.Rotation = -1 * newValues.angle
+        this.editingStepTweakedOptions.Rotation = -1 * newValues.angle
       }
       if (newValues.backgroundColor !== undefined) {
-        this.tweakedStepOptions.Couleur_fond = newValues.backgroundColor
+        this.editingStepTweakedOptions.Couleur_fond = newValues.backgroundColor
       }
       if (newValues.textColor !== undefined) {
-        this.tweakedStepOptions.Couleur_texte = newValues.textColor
+        this.editingStepTweakedOptions.Couleur_texte = newValues.textColor
       }
 
-      this.$emit('options-changed', this.tweakedStepOptions)
+      this.$emit('options-changed', this.editingStepTweakedOptions)
     }
   },
   components: {

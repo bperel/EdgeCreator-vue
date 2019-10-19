@@ -11,6 +11,7 @@ export default {
     steps: [],
     loadingStep: null,
     editingStep: null,
+    editingStepInitialOptions: {},
     editingStepTweakedOptions: {},
     lastGenerationTimePerStep: null
   },
@@ -48,11 +49,16 @@ export default {
       }
     },
     startEditing (state, step) { state.editingStep = step },
+    setEditingStepOptions (state, stepOptions) {
+      state.editingStepInitialOptions = stepOptions
+      state.editingStepTweakedOptions = { ...stepOptions }
+    },
     setEditingStepTweakedOptions (state, tweakedOptions) { state.editingStepTweakedOptions = tweakedOptions },
     updateLastPreviewGenerationTime (state, stepNumber) { state.lastGenerationTimePerStep[stepNumber] = new Date().getTime() },
     stopEditing (state) {
       state.editingStep = null
-      state.editingStepTweakedOptions = {}
+      state.editingStepInitialOptions = null
+      state.editingStepTweakedOptions = null
     }
   },
   getters: {
@@ -81,6 +87,9 @@ export default {
       getters.addZoom(state.dimensions.height),
 
     userIsEditor: (state) => () =>
-      ['Edition', 'Admin'].includes(state.user.privilege)
+      ['Edition', 'Admin'].includes(state.user.privilege),
+
+    stepOptionsHaveBeenTweaked: state => () =>
+      JSON.stringify(state.editingStepInitialOptions) !== JSON.stringify(state.editingStepTweakedOptions)
   }
 }

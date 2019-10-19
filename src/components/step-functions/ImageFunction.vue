@@ -12,7 +12,7 @@
         <img ref="image"
              v-show="loaded"
              @load="loaded = true; calculateImageRatio($refs.image)"
-             :src="getElementUrl(tweakedStepOptions.Source)"
+             :src="getElementUrl(editingStepTweakedOptions.Source)"
              :style="{width: '100%', height: '100%'}"/>
       </Draggable>
     </template>
@@ -24,7 +24,7 @@
 
     <div class="d-flex">
       <v-text-field
-          v-model="tweakedStepOptions.Source"
+          v-model="editingStepTweakedOptions.Source"
           label="Image utilisée"
           required
       />
@@ -35,7 +35,7 @@
         <ImageGalleryWizard
             v-if="showImageGalleryDialog"
             :type="'Source'"
-            :selected="tweakedStepOptions.Source"
+            :selected="editingStepTweakedOptions.Source"
             @select-image="updatePreview({source: $event}); showImageGalleryDialog = false"
         />
       </v-dialog>
@@ -59,16 +59,16 @@ export default {
       'displayedHeight'
     ]),
     shownX () {
-      return this.addZoom(this.tweakedStepOptions.Decalage_x)
+      return this.addZoom(this.editingStepTweakedOptions.Decalage_x)
     },
     shownY () {
-      return this.addZoom(this.tweakedStepOptions.Decalage_y)
+      return this.addZoom(this.editingStepTweakedOptions.Decalage_y)
     },
     shownWidth () {
-      return this.displayedWidth() * parseFloat(this.tweakedStepOptions.Compression_x)
+      return this.displayedWidth() * parseFloat(this.editingStepTweakedOptions.Compression_x)
     },
     shownHeight () {
-      return this.displayedWidth() * parseFloat(this.tweakedStepOptions.Compression_y) / this.imageSourceRatio
+      return this.displayedWidth() * parseFloat(this.editingStepTweakedOptions.Compression_y) / this.imageSourceRatio
     }
   },
   data: () => {
@@ -84,22 +84,22 @@ export default {
     },
     updatePreview (newValues = {}) {
       if (newValues.x !== undefined) {
-        this.tweakedStepOptions.Decalage_x = this.removeZoom(newValues.x)
+        this.editingStepTweakedOptions.Decalage_x = this.removeZoom(newValues.x)
       }
       if (newValues.w !== undefined) {
-        this.tweakedStepOptions.Compression_x = newValues.w / this.displayedWidth()
+        this.editingStepTweakedOptions.Compression_x = newValues.w / this.displayedWidth()
       }
       if (newValues.y !== undefined) {
-        this.tweakedStepOptions.Decalage_y = this.removeZoom(newValues.y)
+        this.editingStepTweakedOptions.Decalage_y = this.removeZoom(newValues.y)
       }
       if (newValues.h !== undefined) {
-        this.tweakedStepOptions.Compression_y = this.tweakedStepOptions.Compression_x * (this.imageSourceRatio / (newValues.w / newValues.h))
+        this.editingStepTweakedOptions.Compression_y = this.editingStepTweakedOptions.Compression_x * (this.imageSourceRatio / (newValues.w / newValues.h))
       }
       if (newValues.source !== undefined) {
-        this.tweakedStepOptions.Source = newValues.source
+        this.editingStepTweakedOptions.Source = newValues.source
       }
 
-      this.$emit('options-changed', this.tweakedStepOptions)
+      this.$emit('options-changed', this.editingStepTweakedOptions)
     }
   },
   components: {

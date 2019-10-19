@@ -4,8 +4,8 @@
       <Draggable
           :resizable="true"
           :rotatable="false"
-          :x="addZoom(tweakedStepOptions.Pos_x_debut)"
-          :y="addZoom(tweakedStepOptions.Pos_y_debut)"
+          :x="addZoom(editingStepTweakedOptions.Pos_x_debut)"
+          :y="addZoom(editingStepTweakedOptions.Pos_y_debut)"
           :width="shownWidth"
           :height="shownHeight"
           @update-position="updatePreview">
@@ -19,8 +19,8 @@
       </ul>
     </template>
 
-    <ColorPicker :color="tweakedStepOptions.Couleur" @update-color="updatePreview"/>
-    <label>Rectangle rempli :&nbsp;<input type="checkbox" v-model="tweakedStepOptions.Rempli" @change="updatePreview"/></label>
+    <ColorPicker :color="editingStepTweakedOptions.Couleur" @update-color="updatePreview"/>
+    <v-checkbox v-model="editingStepTweakedOptions.Rempli" @change="updatePreview" label="Rectangle rempli" />
   </StepFunction>
 </template>
 
@@ -35,39 +35,39 @@ export default {
   computed: {
     rectangleStyle: function () {
       return {
-        backgroundColor: this.tweakedStepOptions.Rempli ? this.tweakedStepOptions.Couleur : 'transparent',
-        outline: this.tweakedStepOptions.Rempli ? 'none' : `1px solid ${this.tweakedStepOptions.Couleur}`
+        backgroundColor: this.editingStepTweakedOptions.Rempli ? this.editingStepTweakedOptions.Couleur : 'transparent',
+        outline: this.editingStepTweakedOptions.Rempli ? 'none' : `1px solid ${this.editingStepTweakedOptions.Couleur}`
       }
     },
     shownWidth: function () {
-      return this.addZoom(this.tweakedStepOptions.Pos_x_fin - this.tweakedStepOptions.Pos_x_debut)
+      return this.addZoom(this.editingStepTweakedOptions.Pos_x_fin - this.editingStepTweakedOptions.Pos_x_debut)
     },
     shownHeight: function () {
-      return this.addZoom(this.tweakedStepOptions.Pos_y_fin - this.tweakedStepOptions.Pos_y_debut)
+      return this.addZoom(this.editingStepTweakedOptions.Pos_y_fin - this.editingStepTweakedOptions.Pos_y_debut)
     }
   },
   methods: {
     updatePreview (newValues = {}) {
       if (newValues.x !== undefined) {
-        this.tweakedStepOptions.Pos_x_debut = this.removeZoom(newValues.x)
+        this.editingStepTweakedOptions.Pos_x_debut = this.removeZoom(newValues.x)
       }
       if (newValues.w !== undefined) {
-        this.tweakedStepOptions.Pos_x_fin = this.removeZoom(newValues.x + newValues.w)
+        this.editingStepTweakedOptions.Pos_x_fin = this.removeZoom(newValues.x + newValues.w)
       }
       if (newValues.y !== undefined) {
-        this.tweakedStepOptions.Pos_y_debut = this.removeZoom(newValues.y)
+        this.editingStepTweakedOptions.Pos_y_debut = this.removeZoom(newValues.y)
       }
       if (newValues.h !== undefined) {
-        this.tweakedStepOptions.Pos_y_fin = this.removeZoom(newValues.y + newValues.h)
+        this.editingStepTweakedOptions.Pos_y_fin = this.removeZoom(newValues.y + newValues.h)
       }
       if (newValues.color !== undefined) {
-        this.tweakedStepOptions.Couleur = newValues.color
+        this.editingStepTweakedOptions.Couleur = newValues.color
       }
       if (newValues.filled !== undefined) {
-        this.tweakedStepOptions.Rempli = newValues.filled
+        this.editingStepTweakedOptions.Rempli = newValues.filled
       }
 
-      this.$emit('options-changed', this.tweakedStepOptions)
+      this.$emit('options-changed', this.editingStepTweakedOptions)
     }
   },
   components: {

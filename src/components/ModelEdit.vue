@@ -8,7 +8,7 @@
              :src="previewUrl(step.Ordre)"
              @load="isLoaded = true; loadNextStep()"/>
       </div>
-      <v-card class="step-options-wrapper d-flex column justify-space-between">
+      <v-card class="step-options-wrapper d-flex column justify-space-between" :style="{height: `${displayedHeight()}px`}">
         <v-sheet>
           <v-tabs vertical right @change="editStep">
             <v-tab v-for="step in steps" :key="step.Ordre" class="d-flex center">
@@ -16,16 +16,10 @@
                    :title="step.Nom_fonction"/>
             </v-tab>
             <v-tab-item v-for="step in steps" :key="step.Ordre" style="width: 500px">
-              <component v-if="!!editingStepOptions" :is="stepFunctions[step.Nom_fonction]" :options="editingStepOptions"
-                         @options-changed="updatePreview"/>
+              <component v-if="editingStepInitialOptions" :is="stepFunctions[step.Nom_fonction]" />
             </v-tab-item>
           </v-tabs>
         </v-sheet>
-        <v-footer absolute class="d-flex justify-space-between">
-          <v-btn v-for="action in availableActions" @click.stop="action.click" :key="action.id">
-            {{ action.title }}
-          </v-btn>
-        </v-footer>
       </v-card>
     </v-layout>
     <v-layout id="model-preview">
@@ -37,8 +31,8 @@
 <script>
 import * as stepFunctions from './step-functions'
 import StepPreview from './StepPreview'
-import stepOptionsMixin from '../stepOptionsMixin'
 import { mapGetters, mapMutations, mapState } from 'vuex'
+import stepOptionsMixin from '../stepOptionsMixin'
 
 const axios = require('axios')
 
@@ -48,17 +42,12 @@ export default {
   data () {
     return {
       isLoaded: false,
-      editingStepOptions: null,
       stepFunctions: {
         Rectangle: 'RectangleFunction',
         Image: 'ImageFunction',
         Remplir: 'FillFunction',
         TexteMyFonts: 'TextFunction'
-      },
-      availableActions: [
-        { id: 'close', title: 'Fermer', click: this.requestCancelEditing },
-        { id: 'validate', title: 'Valider', click: this.saveStep }
-      ]
+      }
     }
   },
   computed: {
@@ -67,7 +56,8 @@ export default {
       'dimensions',
       'steps',
       'loadingStep',
-      'editingStep'
+      'editingStep',
+      'editingStepInitialOptions'
     ]),
     ...mapGetters([
       'getStepPreviewUrl',
@@ -79,9 +69,6 @@ export default {
         width: `${this.displayedWidth()}px`,
         height: `${this.displayedHeight()}px`
       }
-    },
-    stepsExceptEditingStep () {
-      return this.steps.filter(step => step.Ordre !== this.editingStep)
     }
   },
   watch: {
@@ -113,9 +100,7 @@ export default {
       'setLoadingStep',
       'loadNextStep',
       'startEditing',
-      'stopEditing',
-      'setEditingStepTweakedOptions',
-      'updateLastPreviewGenerationTime'
+      'setEditingStepOptions'
     ]),
 
     previewUrl: function (stepNumber) {
@@ -131,28 +116,14 @@ export default {
     },
 
     editStep: function (stepIndex) {
-      this.editingStepOptions = null
+      this.setEditingStepOptions(null)
       this.stepNumber = this.steps[stepIndex].Ordre
       let vm = this
       axios.post(`/parametrageg_wizard/index/${this.stepNumber}`)
         .then(({ data }) => {
-          vm.editingStepOptions = vm.convertToSimpleOptions(data)
+          vm.setEditingStepOptions(vm.convertToSimpleOptions(data))
           vm.startEditing(vm.stepNumber)
         })
-    },
-
-    updatePreview: function (newOptions = {}) {
-      this.setEditingStepTweakedOptions(Object.assign({}, newOptions))
-    },
-
-    saveStep: function () {
-      let vm = this
-      let options = this.convertFromSimpleOptions(this.editingStepTweakedOptions || {})
-      axios.post(`/update_wizard/index/${this.editingStep}/${this.objectToUrlParams(options)}`).then(({ data }) => {
-        vm.updateLastPreviewGenerationTime(vm.editingStep)
-        vm.updateLastPreviewGenerationTime('final')
-        vm.stopEditing()
-      })
     }
   },
   components: {
@@ -208,11 +179,15 @@ export default {
 
   .step-options-wrapper {
     margin: 0 16px 0 8px;
-    padding-bottom: 48px;
+    /*overflow-y: auto;*/
   }
 
   .step-options-wrapper > div {
     padding: 8px;
+  }
+
+  .step-options-wrapper .v-tabs {
+    height: 100%;
   }
 
   .layer {
@@ -221,5 +196,14 @@ export default {
 
   #model-preview {
     flex-grow: 0;
+  }
+
+  .v-tabs-items > div {
+    height: 100%;
+  }
+
+  .v-tabs-bar__content {
+    overflow-y: auto;
+    width: 90px;
   }
 </style>

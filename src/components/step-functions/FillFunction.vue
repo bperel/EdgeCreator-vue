@@ -2,8 +2,8 @@
   <StepFunction>
     <template #canvas-override>
       <Draggable
-          :x="addZoom(tweakedStepOptions.Pos_x)"
-          :y="addZoom(tweakedStepOptions.Pos_y)"
+          :x="addZoom(editingStepTweakedOptions.Pos_x)"
+          :y="addZoom(editingStepTweakedOptions.Pos_y)"
           :width="CROSS_SIZE"
           :height="CROSS_SIZE"
           :boundOffsetX="- CROSS_SIZE / 2"
@@ -19,7 +19,7 @@
       </ul>
     </template>
 
-    <ColorPicker :color="tweakedStepOptions.Couleur" @update-color="updatePreview"/>
+    <ColorPicker :color="editingStepTweakedOptions.Couleur" @update-color="updatePreview"/>
   </StepFunction>
 </template>
 
@@ -39,16 +39,16 @@ export default {
   methods: {
     updatePreview (newValues = {}) {
       if (newValues.x !== undefined) {
-        this.tweakedStepOptions.Pos_x = this.removeZoom(newValues.x)
+        this.editingStepTweakedOptions.Pos_x = this.removeZoom(newValues.x)
       }
       if (newValues.y !== undefined) {
-        this.tweakedStepOptions.Pos_y = this.removeZoom(newValues.y)
+        this.editingStepTweakedOptions.Pos_y = this.removeZoom(newValues.y)
       }
       if (newValues.color !== undefined) {
-        this.tweakedStepOptions.Couleur = newValues.color
+        this.editingStepTweakedOptions.Couleur = newValues.color
       }
 
-      this.$emit('options-changed', this.tweakedStepOptions)
+      this.$emit('options-changed', this.editingStepTweakedOptions)
     }
   },
   components: {

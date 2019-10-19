@@ -1,8 +1,9 @@
 <template>
-  <div class="d-flex">
-    <label>{{ label }} :
-      <input :value="color" @input="emitColorChangeEvent" type="color" />
-    </label>
+  <div>
+    <v-input>
+      <label class="v-label v-label--active theme--light">{{ label }}</label>
+      <input slot="default" :value="color" @input="emitColorChangeEvent" type="color" />
+    </v-input>
   </div>
 </template>
 
