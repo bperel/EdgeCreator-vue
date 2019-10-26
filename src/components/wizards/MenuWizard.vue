@@ -19,13 +19,11 @@
       <p>
         Que voulez-vous faire ?
       </p>
-      <v-container>
-        <v-btn-toggle v-model="currentAction">
-          <v-btn v-for="action in availableActions" :key="action.id" left :disabled="action.disabled">
-            {{ action.title }}
-          </v-btn>
-        </v-btn-toggle>
-      </v-container>
+      <v-btn-toggle v-model="currentAction" class="flex-column">
+        <v-btn v-for="action in availableActions" :key="action.id" left :disabled="action.disabled">
+          {{ action.title }}
+        </v-btn>
+      </v-btn-toggle>
       <div v-if="availableActions[currentAction] && availableActions[currentAction].id === 'continue'" grid-list-md>
         <v-btn-toggle v-model="edgeToEditIndex">
           <v-container>
@@ -59,7 +57,7 @@ export default {
   name: 'MenuWizard',
   data: () => ({
     dialog: true,
-    currentAction: null,
+    currentAction: 3,
     actions: [
       { id: 'send', title: 'Envoyer des photos de tranche', editorsOnly: false },
       { id: 'create', title: 'Créer une tranche de magazine', editorsOnly: true },
