@@ -54,12 +54,7 @@ export default {
       state.editingStepTweakedOptions = { ...stepOptions }
     },
     setEditingStepTweakedOptions (state, tweakedOptions) { state.editingStepTweakedOptions = tweakedOptions },
-    updateLastPreviewGenerationTime (state, stepNumber) { state.lastGenerationTimePerStep[stepNumber] = new Date().getTime() },
-    stopEditing (state) {
-      state.editingStep = null
-      state.editingStepInitialOptions = null
-      state.editingStepTweakedOptions = null
-    }
+    updateLastPreviewGenerationTime (state, stepNumber) { state.lastGenerationTimePerStep[stepNumber] = new Date().getTime() }
   },
   getters: {
     getElementUrl: (state) => fileName =>

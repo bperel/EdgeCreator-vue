@@ -45,7 +45,7 @@ export default {
     ...mapMutations([
       'setEditingStepTweakedOptions',
       'updateLastPreviewGenerationTime',
-      'stopEditing'
+      'setEditingStepOptions'
     ]),
 
     updatePreview: function (newOptions = {}) {
@@ -62,7 +62,7 @@ export default {
       axios.post(`/update_wizard/index/${this.editingStep}/${this.objectToUrlParams(options)}`).then(({ data }) => {
         vm.updateLastPreviewGenerationTime(vm.editingStep)
         vm.updateLastPreviewGenerationTime('final')
-        vm.stopEditing()
+        vm.setEditingStepOptions({ ...this.editingStepTweakedOptions })
       })
     }
   }
